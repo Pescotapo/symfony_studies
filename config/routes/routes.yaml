@@ -1,3 +1,0 @@
-app_lucky:
-  path: lucky/number
-  controller: App\ControllerTest1\RandomNumber::random_number
