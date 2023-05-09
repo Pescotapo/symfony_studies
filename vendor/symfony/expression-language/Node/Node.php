@@ -57,9 +57,6 @@ class Node
         return implode("\n", $repr);
     }
 
-    /**
-     * @return void
-     */
     public function compile(Compiler $compiler)
     {
         foreach ($this->nodes as $node) {
@@ -67,9 +64,6 @@ class Node
         }
     }
 
-    /**
-     * @return mixed
-     */
     public function evaluate(array $functions, array $values)
     {
         $results = [];
@@ -85,9 +79,6 @@ class Node
         throw new \BadMethodCallException(sprintf('Dumping a "%s" instance is not supported yet.', static::class));
     }
 
-    /**
-     * @return string
-     */
     public function dump()
     {
         $dump = '';
@@ -99,17 +90,11 @@ class Node
         return $dump;
     }
 
-    /**
-     * @return string
-     */
     protected function dumpString(string $value)
     {
         return sprintf('"%s"', addcslashes($value, "\0\t\"\\"));
     }
 
-    /**
-     * @return bool
-     */
     protected function isHash(array $value)
     {
         $expectedKey = 0;

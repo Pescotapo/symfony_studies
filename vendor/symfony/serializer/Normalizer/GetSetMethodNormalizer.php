@@ -38,11 +38,6 @@ class GetSetMethodNormalizer extends AbstractObjectNormalizer
 {
     private static $setterAccessibleCache = [];
 
-    public function getSupportedTypes(?string $format): array
-    {
-        return ['object' => __CLASS__ === static::class || $this->hasCacheableSupportsMethod()];
-    }
-
     /**
      * @param array $context
      */
@@ -59,13 +54,8 @@ class GetSetMethodNormalizer extends AbstractObjectNormalizer
         return parent::supportsDenormalization($data, $type, $format) && $this->supports($type);
     }
 
-    /**
-     * @deprecated since Symfony 6.3, use "getSupportedTypes()" instead
-     */
     public function hasCacheableSupportsMethod(): bool
     {
-        trigger_deprecation('symfony/serializer', '6.3', 'The "%s()" method is deprecated, use "getSupportedTypes()" instead.', __METHOD__);
-
         return __CLASS__ === static::class;
     }
 
@@ -141,9 +131,6 @@ class GetSetMethodNormalizer extends AbstractObjectNormalizer
         return null;
     }
 
-    /**
-     * @return void
-     */
     protected function setAttributeValue(object $object, string $attribute, mixed $value, string $format = null, array $context = [])
     {
         $setter = 'set'.ucfirst($attribute);

@@ -153,7 +153,7 @@ final class AmpHttpClient implements HttpClientInterface, LoggerAwareInterface, 
         return new ResponseStream(AmpResponse::stream($responses, $timeout));
     }
 
-    public function reset(): void
+    public function reset()
     {
         $this->multi->dnsCache = [];
 

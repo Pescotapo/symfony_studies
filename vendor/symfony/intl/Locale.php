@@ -34,7 +34,7 @@ final class Locale extends \Locale
      *
      * @see getFallback()
      */
-    public static function setDefaultFallback(?string $locale): void
+    public static function setDefaultFallback(?string $locale)
     {
         self::$defaultFallback = $locale;
     }

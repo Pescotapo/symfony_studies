@@ -50,9 +50,6 @@ class ServerLogCommand extends Command
         return parent::isEnabled();
     }
 
-    /**
-     * @return void
-     */
     protected function configure()
     {
         if (!class_exists(ConsoleFormatter::class)) {
@@ -148,7 +145,7 @@ EOF
         }
     }
 
-    private function displayLog(OutputInterface $output, int $clientId, array $record): void
+    private function displayLog(OutputInterface $output, int $clientId, array $record)
     {
         if (isset($record['log_id'])) {
             $clientId = unpack('H*', $record['log_id'])[1];

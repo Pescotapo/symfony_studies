@@ -60,9 +60,6 @@ class ClassMetadata implements ClassMetadataInterface
         return $this->name;
     }
 
-    /**
-     * @return void
-     */
     public function addAttributeMetadata(AttributeMetadataInterface $attributeMetadata)
     {
         $this->attributesMetadata[$attributeMetadata->getName()] = $attributeMetadata;
@@ -73,9 +70,6 @@ class ClassMetadata implements ClassMetadataInterface
         return $this->attributesMetadata;
     }
 
-    /**
-     * @return void
-     */
     public function merge(ClassMetadataInterface $classMetadata)
     {
         foreach ($classMetadata->getAttributesMetadata() as $attributeMetadata) {
@@ -101,9 +95,6 @@ class ClassMetadata implements ClassMetadataInterface
         return $this->classDiscriminatorMapping;
     }
 
-    /**
-     * @return void
-     */
     public function setClassDiscriminatorMapping(ClassDiscriminatorMapping $mapping = null)
     {
         if (1 > \func_num_args()) {

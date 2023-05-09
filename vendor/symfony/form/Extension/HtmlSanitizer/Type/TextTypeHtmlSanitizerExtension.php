@@ -35,9 +35,6 @@ class TextTypeHtmlSanitizerExtension extends AbstractTypeExtension
         return [TextType::class];
     }
 
-    /**
-     * @return void
-     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver
@@ -47,9 +44,6 @@ class TextTypeHtmlSanitizerExtension extends AbstractTypeExtension
         ;
     }
 
-    /**
-     * @return void
-     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         if (!$options['sanitize_html']) {

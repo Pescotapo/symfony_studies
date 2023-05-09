@@ -25,7 +25,7 @@ class NullCoalesceNode extends Node
         parent::__construct(['expr1' => $expr1, 'expr2' => $expr2]);
     }
 
-    public function compile(Compiler $compiler): void
+    public function compile(Compiler $compiler)
     {
         $compiler
             ->raw('((')
@@ -36,7 +36,7 @@ class NullCoalesceNode extends Node
         ;
     }
 
-    public function evaluate(array $functions, array $values): mixed
+    public function evaluate(array $functions, array $values)
     {
         if ($this->nodes['expr1'] instanceof GetAttrNode) {
             $this->nodes['expr1']->attributes['is_null_coalesce'] = true;
@@ -45,7 +45,7 @@ class NullCoalesceNode extends Node
         return $this->nodes['expr1']->evaluate($functions, $values) ?? $this->nodes['expr2']->evaluate($functions, $values);
     }
 
-    public function toArray(): array
+    public function toArray()
     {
         return ['(', $this->nodes['expr1'], ') ?? (', $this->nodes['expr2'], ')'];
     }

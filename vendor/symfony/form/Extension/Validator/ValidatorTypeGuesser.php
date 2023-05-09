@@ -66,24 +66,32 @@ class ValidatorTypeGuesser implements FormTypeGuesserInterface
 
     public function guessType(string $class, string $property): ?TypeGuess
     {
-        return $this->guess($class, $property, $this->guessTypeForConstraint(...));
+        return $this->guess($class, $property, function (Constraint $constraint) {
+            return $this->guessTypeForConstraint($constraint);
+        });
     }
 
     public function guessRequired(string $class, string $property): ?ValueGuess
     {
-        // If we don't find any constraint telling otherwise, we can assume
-        // that a field is not required (with LOW_CONFIDENCE)
-        return $this->guess($class, $property, $this->guessRequiredForConstraint(...), false);
+        return $this->guess($class, $property, function (Constraint $constraint) {
+            return $this->guessRequiredForConstraint($constraint);
+            // If we don't find any constraint telling otherwise, we can assume
+            // that a field is not required (with LOW_CONFIDENCE)
+        }, false);
     }
 
     public function guessMaxLength(string $class, string $property): ?ValueGuess
     {
-        return $this->guess($class, $property, $this->guessMaxLengthForConstraint(...));
+        return $this->guess($class, $property, function (Constraint $constraint) {
+            return $this->guessMaxLengthForConstraint($constraint);
+        });
     }
 
     public function guessPattern(string $class, string $property): ?ValueGuess
     {
-        return $this->guess($class, $property, $this->guessPatternForConstraint(...));
+        return $this->guess($class, $property, function (Constraint $constraint) {
+            return $this->guessPatternForConstraint($constraint);
+        });
     }
 
     /**

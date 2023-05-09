@@ -59,9 +59,6 @@ class DebugCommand extends Command
         $this->fileLinkFormatter = $fileLinkFormatter;
     }
 
-    /**
-     * @return void
-     */
     protected function configure()
     {
         $this
@@ -124,7 +121,7 @@ EOF
         }
     }
 
-    private function displayPathsText(SymfonyStyle $io, string $name): void
+    private function displayPathsText(SymfonyStyle $io, string $name)
     {
         $file = new \ArrayIterator($this->findTemplateFiles($name));
         $paths = $this->getLoaderPaths($name);
@@ -165,7 +162,9 @@ EOF
                 [$namespace, $shortname] = $this->parseTemplateName($name);
                 $alternatives = $this->findAlternatives($shortname, $shortnames);
                 if (FilesystemLoader::MAIN_NAMESPACE !== $namespace) {
-                    $alternatives = array_map(fn ($shortname) => '@'.$namespace.'/'.$shortname, $alternatives);
+                    $alternatives = array_map(function ($shortname) use ($namespace) {
+                        return '@'.$namespace.'/'.$shortname;
+                    }, $alternatives);
                 }
             }
 
@@ -199,7 +198,7 @@ EOF
         }
     }
 
-    private function displayPathsJson(SymfonyStyle $io, string $name): void
+    private function displayPathsJson(SymfonyStyle $io, string $name)
     {
         $files = $this->findTemplateFiles($name);
         $paths = $this->getLoaderPaths($name);
@@ -217,7 +216,7 @@ EOF
         $io->writeln(json_encode($data));
     }
 
-    private function displayGeneralText(SymfonyStyle $io, string $filter = null): void
+    private function displayGeneralText(SymfonyStyle $io, string $filter = null)
     {
         $decorated = $io->isDecorated();
         $types = ['functions', 'filters', 'tests', 'globals'];
@@ -251,7 +250,7 @@ EOF
         }
     }
 
-    private function displayGeneralJson(SymfonyStyle $io, ?string $filter): void
+    private function displayGeneralJson(SymfonyStyle $io, ?string $filter)
     {
         $decorated = $io->isDecorated();
         $types = ['functions', 'filters', 'tests', 'globals'];
@@ -544,7 +543,7 @@ EOF
         }
 
         $threshold = 1e3;
-        $alternatives = array_filter($alternatives, fn ($lev) => $lev < 2 * $threshold);
+        $alternatives = array_filter($alternatives, function ($lev) use ($threshold) { return $lev < 2 * $threshold; });
         ksort($alternatives, \SORT_NATURAL | \SORT_FLAG_CASE);
 
         return array_keys($alternatives);

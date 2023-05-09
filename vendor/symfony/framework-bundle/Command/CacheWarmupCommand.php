@@ -39,7 +39,7 @@ class CacheWarmupCommand extends Command
         $this->cacheWarmer = $cacheWarmer;
     }
 
-    protected function configure(): void
+    protected function configure()
     {
         $this
             ->setDefinition([

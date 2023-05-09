@@ -20,7 +20,7 @@ namespace Symfony\Component\Intl\Data\Bundle\Writer;
  */
 class PhpBundleWriter implements BundleWriterInterface
 {
-    public function write(string $path, string $locale, mixed $data): void
+    public function write(string $path, string $locale, mixed $data)
     {
         $template = <<<'TEMPLATE'
 <?php

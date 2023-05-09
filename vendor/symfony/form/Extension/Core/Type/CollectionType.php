@@ -21,16 +21,15 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class CollectionType extends AbstractType
 {
-    /**
-     * @return void
-     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $resizePrototypeOptions = null;
         if ($options['allow_add'] && $options['prototype']) {
+            $resizePrototypeOptions = array_replace($options['entry_options'], $options['prototype_options']);
             $prototypeOptions = array_replace([
                 'required' => $options['required'],
                 'label' => $options['prototype_name'].'label__',
-            ], array_replace($options['entry_options'], $options['prototype_options']));
+            ], $resizePrototypeOptions);
 
             if (null !== $options['prototype_data']) {
                 $prototypeOptions['data'] = $options['prototype_data'];
@@ -45,15 +44,13 @@ class CollectionType extends AbstractType
             $options['entry_options'],
             $options['allow_add'],
             $options['allow_delete'],
-            $options['delete_empty']
+            $options['delete_empty'],
+            $resizePrototypeOptions
         );
 
         $builder->addEventSubscriber($resizeListener);
     }
 
-    /**
-     * @return void
-     */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         $view->vars = array_replace($view->vars, [
@@ -67,9 +64,6 @@ class CollectionType extends AbstractType
         }
     }
 
-    /**
-     * @return void
-     */
     public function finishView(FormView $view, FormInterface $form, array $options)
     {
         $prefixOffset = -2;
@@ -101,12 +95,9 @@ class CollectionType extends AbstractType
         }
     }
 
-    /**
-     * @return void
-     */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $entryOptionsNormalizer = static function (Options $options, $value) {
+        $entryOptionsNormalizer = function (Options $options, $value) {
             $value['block_name'] = 'entry';
 
             return $value;

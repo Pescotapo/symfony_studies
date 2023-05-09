@@ -28,9 +28,6 @@ class TransformationFailureExtension extends AbstractTypeExtension
         $this->translator = $translator;
     }
 
-    /**
-     * @return void
-     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         if (!isset($options['constraints'])) {

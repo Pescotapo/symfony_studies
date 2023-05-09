@@ -152,7 +152,7 @@ EOF
         );
     }
 
-    private function displaySwitchUser(FirewallContext $context, SymfonyStyle $io): void
+    private function displaySwitchUser(FirewallContext $context, SymfonyStyle $io)
     {
         if ((null === $config = $context->getConfig()) || (null === $switchUser = $config->getSwitchUser())) {
             return;
@@ -216,9 +216,11 @@ EOF
         $io->table(
             ['Classname'],
             array_map(
-                static fn ($authenticator) => [
-                    $authenticator::class,
-                ],
+                static function ($authenticator) {
+                    return [
+                        $authenticator::class,
+                    ];
+                },
                 $authenticators
             )
         );
@@ -228,7 +230,7 @@ EOF
     {
         if (\is_array($callable)) {
             if (\is_object($callable[0])) {
-                return sprintf('%s::%s()', $callable[0]::class, $callable[1]);
+                return sprintf('%s::%s()', \get_class($callable[0]), $callable[1]);
             }
 
             return sprintf('%s::%s()', $callable[0], $callable[1]);

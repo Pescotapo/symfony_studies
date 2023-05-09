@@ -130,8 +130,6 @@ abstract class RegisterMappingsPass implements CompilerPassInterface
 
     /**
      * Register mappings and alias with the metadata drivers.
-     *
-     * @return void
      */
     public function process(ContainerBuilder $container)
     {

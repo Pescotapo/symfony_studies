@@ -172,18 +172,38 @@ class ProfilerController
 
         $this->cspHandler?->disableCsp();
 
-        $session = $request->hasSession() ? $request->getSession() : null;
+        if (!$request->hasSession()) {
+            $ip =
+            $method =
+            $statusCode =
+            $url =
+            $start =
+            $end =
+            $limit =
+            $token = null;
+        } else {
+            $session = $request->getSession();
+
+            $ip = $request->query->get('ip', $session->get('_profiler_search_ip'));
+            $method = $request->query->get('method', $session->get('_profiler_search_method'));
+            $statusCode = $request->query->get('status_code', $session->get('_profiler_search_status_code'));
+            $url = $request->query->get('url', $session->get('_profiler_search_url'));
+            $start = $request->query->get('start', $session->get('_profiler_search_start'));
+            $end = $request->query->get('end', $session->get('_profiler_search_end'));
+            $limit = $request->query->get('limit', $session->get('_profiler_search_limit'));
+            $token = $request->query->get('token', $session->get('_profiler_search_token'));
+        }
 
         return new Response(
             $this->twig->render('@WebProfiler/Profiler/search.html.twig', [
-                'token' => $request->query->get('token', $session?->get('_profiler_search_token')),
-                'ip' => $request->query->get('ip', $session?->get('_profiler_search_ip')),
-                'method' => $request->query->get('method', $session?->get('_profiler_search_method')),
-                'status_code' => $request->query->get('status_code', $session?->get('_profiler_search_status_code')),
-                'url' => $request->query->get('url', $session?->get('_profiler_search_url')),
-                'start' => $request->query->get('start', $session?->get('_profiler_search_start')),
-                'end' => $request->query->get('end', $session?->get('_profiler_search_end')),
-                'limit' => $request->query->get('limit', $session?->get('_profiler_search_limit')),
+                'token' => $token,
+                'ip' => $ip,
+                'method' => $method,
+                'status_code' => $statusCode,
+                'url' => $url,
+                'start' => $start,
+                'end' => $end,
+                'limit' => $limit,
                 'request' => $request,
                 'render_hidden_by_default' => false,
             ]),
@@ -352,7 +372,7 @@ class ProfilerController
         return $this->templateManager ??= new TemplateManager($this->profiler, $this->twig, $this->templates);
     }
 
-    private function denyAccessIfProfilerDisabled(): void
+    private function denyAccessIfProfilerDisabled()
     {
         if (null === $this->profiler) {
             throw new NotFoundHttpException('The profiler must be enabled.');

@@ -1,11 +1,6 @@
 CHANGELOG
 =========
 
-6.3
----
-
- * Add `AbstractBrowser::useHtml5Parser()`
-
 6.1
 ---
 

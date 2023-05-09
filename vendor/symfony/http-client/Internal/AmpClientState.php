@@ -94,7 +94,9 @@ final class AmpClientState extends ClientState
         }
 
         $request->addEventListener(new AmpListener($info, $options['peer_fingerprint']['pin-sha256'] ?? [], $onProgress, $handle));
-        $request->setPushHandler(fn ($request, $response): Promise => $this->handlePush($request, $response, $options));
+        $request->setPushHandler(function ($request, $response) use ($options): Promise {
+            return $this->handlePush($request, $response, $options);
+        });
 
         ($request->hasHeader('content-length') ? new Success((int) $request->getHeader('content-length')) : $request->getBody()->getBodyLength())
             ->onResolve(static function ($e, $bodySize) use (&$info) {
@@ -128,7 +130,7 @@ final class AmpClientState extends ClientState
             'proxy' => $options['proxy'],
         ];
 
-        $key = hash('xxh128', serialize($options));
+        $key = md5(serialize($options));
 
         if (isset($this->clients[$key])) {
             return $this->clients[$key];

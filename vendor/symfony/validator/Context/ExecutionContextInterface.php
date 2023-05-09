@@ -29,7 +29,7 @@ use Symfony\Component\Validator\Violation\ConstraintViolationBuilderInterface;
  * When you make another call to the validator, while the validation is in
  * progress, the violations will be isolated from each other:
  *
- *     public function validate(mixed $value, Constraint $constraint): void
+ *     public function validate(mixed $value, Constraint $constraint)
  *     {
  *         $validator = $this->context->getValidator();
  *
@@ -40,7 +40,7 @@ use Symfony\Component\Validator\Violation\ConstraintViolationBuilderInterface;
  * However, if you want to add the violations to the current context, use the
  * {@link ValidatorInterface::inContext()} method:
  *
- *     public function validate(mixed $value, Constraint $constraint): void
+ *     public function validate(mixed $value, Constraint $constraint)
  *     {
  *         $validator = $this->context->getValidator();
  *
@@ -66,8 +66,6 @@ interface ExecutionContextInterface
      *
      * @param string|\Stringable $message The error message as a string or a stringable object
      * @param array              $params  The parameters substituted in the error message
-     *
-     * @return void
      */
     public function addViolation(string $message, array $params = []);
 
@@ -93,7 +91,7 @@ interface ExecutionContextInterface
      *
      * Useful if you want to validate additional constraints:
      *
-     *     public function validate(mixed $value, Constraint $constraint): void
+     *     public function validate(mixed $value, Constraint $constraint)
      *     {
      *         $validator = $this->context->getValidator();
      *
@@ -127,7 +125,7 @@ interface ExecutionContextInterface
      * @internal Used by the validator engine. Should not be called by user
      *           code.
      */
-    public function setNode(mixed $value, ?object $object, MetadataInterface $metadata = null, string $propertyPath): void;
+    public function setNode(mixed $value, ?object $object, MetadataInterface $metadata = null, string $propertyPath);
 
     /**
      * Sets the currently validated group.
@@ -137,7 +135,7 @@ interface ExecutionContextInterface
      * @internal Used by the validator engine. Should not be called by user
      *           code.
      */
-    public function setGroup(?string $group): void;
+    public function setGroup(?string $group);
 
     /**
      * Sets the currently validated constraint.
@@ -145,7 +143,7 @@ interface ExecutionContextInterface
      * @internal Used by the validator engine. Should not be called by user
      *           code.
      */
-    public function setConstraint(Constraint $constraint): void;
+    public function setConstraint(Constraint $constraint);
 
     /**
      * Marks an object as validated in a specific validation group.
@@ -157,7 +155,7 @@ interface ExecutionContextInterface
      * @internal Used by the validator engine. Should not be called by user
      *           code.
      */
-    public function markGroupAsValidated(string $cacheKey, string $groupHash): void;
+    public function markGroupAsValidated(string $cacheKey, string $groupHash);
 
     /**
      * Returns whether an object was validated in a specific validation group.
@@ -179,7 +177,7 @@ interface ExecutionContextInterface
      * @internal Used by the validator engine. Should not be called by user
      *           code.
      */
-    public function markConstraintAsValidated(string $cacheKey, string $constraintHash): void;
+    public function markConstraintAsValidated(string $cacheKey, string $constraintHash);
 
     /**
      * Returns whether a constraint was validated for an object.
@@ -201,7 +199,7 @@ interface ExecutionContextInterface
      *
      * @see ObjectInitializerInterface
      */
-    public function markObjectAsInitialized(string $cacheKey): void;
+    public function markObjectAsInitialized(string $cacheKey);
 
     /**
      * Returns whether an object was initialized.

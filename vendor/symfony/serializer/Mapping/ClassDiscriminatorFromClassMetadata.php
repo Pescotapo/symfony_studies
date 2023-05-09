@@ -65,7 +65,7 @@ class ClassDiscriminatorFromClassMetadata implements ClassDiscriminatorResolverI
         return $mapping->getMappedObjectType($object);
     }
 
-    private function resolveMappingForMappedObject(object|string $object): ?ClassDiscriminatorMapping
+    private function resolveMappingForMappedObject(object|string $object)
     {
         $reflectionClass = new \ReflectionClass($object);
         if ($parentClass = $reflectionClass->getParentClass()) {

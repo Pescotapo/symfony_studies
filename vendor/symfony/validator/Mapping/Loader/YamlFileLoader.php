@@ -131,7 +131,7 @@ class YamlFileLoader extends FileLoader
         return $classes;
     }
 
-    private function loadClassesFromYaml(): void
+    private function loadClassesFromYaml()
     {
         parent::__construct($this->file);
 
@@ -147,7 +147,7 @@ class YamlFileLoader extends FileLoader
         }
     }
 
-    private function loadClassMetadataFromYaml(ClassMetadata $metadata, array $classDescription): void
+    private function loadClassMetadataFromYaml(ClassMetadata $metadata, array $classDescription)
     {
         if (isset($classDescription['group_sequence_provider'])) {
             $metadata->setGroupSequenceProvider(

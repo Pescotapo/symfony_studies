@@ -53,7 +53,7 @@ class BundleEntryReader implements BundleEntryReaderInterface
      *
      * @param array $localeAliases A mapping of locale aliases to locales
      */
-    public function setLocaleAliases(array $localeAliases): void
+    public function setLocaleAliases(array $localeAliases)
     {
         $this->localeAliases = $localeAliases;
     }

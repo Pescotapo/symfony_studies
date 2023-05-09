@@ -205,8 +205,6 @@ interface FormConfigBuilderInterface extends FormConfigInterface
 
     /**
      * Sets the form factory used for creating new forms.
-     *
-     * @return $this
      */
     public function setFormFactory(FormFactoryInterface $formFactory);
 

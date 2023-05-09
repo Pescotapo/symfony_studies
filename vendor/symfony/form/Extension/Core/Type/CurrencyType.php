@@ -22,9 +22,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class CurrencyType extends AbstractType
 {
-    /**
-     * @return void
-     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
@@ -35,7 +32,9 @@ class CurrencyType extends AbstractType
 
                 $choiceTranslationLocale = $options['choice_translation_locale'];
 
-                return ChoiceList::loader($this, new IntlCallbackChoiceLoader(static fn () => array_flip(Currencies::getNames($choiceTranslationLocale))), $choiceTranslationLocale);
+                return ChoiceList::loader($this, new IntlCallbackChoiceLoader(function () use ($choiceTranslationLocale) {
+                    return array_flip(Currencies::getNames($choiceTranslationLocale));
+                }), $choiceTranslationLocale);
             },
             'choice_translation_domain' => false,
             'choice_translation_locale' => null,

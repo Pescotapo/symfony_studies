@@ -38,9 +38,6 @@ class FormType extends BaseType
         ]));
     }
 
-    /**
-     * @return void
-     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         parent::buildForm($builder, $options);
@@ -69,9 +66,6 @@ class FormType extends BaseType
         $builder->setIsEmptyCallback($options['is_empty_callback']);
     }
 
-    /**
-     * @return void
-     */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         parent::buildView($view, $form, $options);
@@ -111,9 +105,6 @@ class FormType extends BaseType
         ]);
     }
 
-    /**
-     * @return void
-     */
     public function finishView(FormView $view, FormInterface $form, array $options)
     {
         $multipart = false;
@@ -128,33 +119,42 @@ class FormType extends BaseType
         $view->vars['multipart'] = $multipart;
     }
 
-    /**
-     * @return void
-     */
     public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
 
         // Derive "data_class" option from passed "data" object
-        $dataClass = static fn (Options $options) => isset($options['data']) && \is_object($options['data']) ? $options['data']::class : null;
+        $dataClass = function (Options $options) {
+            return isset($options['data']) && \is_object($options['data']) ? \get_class($options['data']) : null;
+        };
 
         // Derive "empty_data" closure from "data_class" option
-        $emptyData = static function (Options $options) {
+        $emptyData = function (Options $options) {
             $class = $options['data_class'];
 
             if (null !== $class) {
-                return static fn (FormInterface $form) => $form->isEmpty() && !$form->isRequired() ? null : new $class();
+                return function (FormInterface $form) use ($class) {
+                    return $form->isEmpty() && !$form->isRequired() ? null : new $class();
+                };
             }
 
-            return static fn (FormInterface $form) => $form->getConfig()->getCompound() ? [] : '';
+            return function (FormInterface $form) {
+                return $form->getConfig()->getCompound() ? [] : '';
+            };
         };
 
         // Wrap "post_max_size_message" in a closure to translate it lazily
-        $uploadMaxSizeMessage = static fn (Options $options) => static fn () => $options['post_max_size_message'];
+        $uploadMaxSizeMessage = function (Options $options) {
+            return function () use ($options) {
+                return $options['post_max_size_message'];
+            };
+        };
 
         // For any form that is not represented by a single HTML control,
         // errors should bubble up by default
-        $errorBubbling = static fn (Options $options) => $options['compound'] && !$options['inherit_data'];
+        $errorBubbling = function (Options $options) {
+            return $options['compound'] && !$options['inherit_data'];
+        };
 
         // If data is given, the form is locked to that data
         // (independent of its value)

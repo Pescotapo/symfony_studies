@@ -110,8 +110,6 @@ abstract class Composite extends Constraint
 
     /**
      * Implicit group names are forwarded to nested constraints.
-     *
-     * @return void
      */
     public function addImplicitGroupName(string $group)
     {
@@ -148,8 +146,6 @@ abstract class Composite extends Constraint
      * constraints passed to the constructor.
      *
      * @see Collection::initializeNestedConstraints()
-     *
-     * @return void
      */
     protected function initializeNestedConstraints()
     {

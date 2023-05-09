@@ -29,9 +29,6 @@ class PasswordTypePasswordHasherExtension extends AbstractTypeExtension
     ) {
     }
 
-    /**
-     * @return void
-     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         if ($options['hash_property_path']) {
@@ -39,9 +36,6 @@ class PasswordTypePasswordHasherExtension extends AbstractTypeExtension
         }
     }
 
-    /**
-     * @return void
-     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([

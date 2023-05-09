@@ -43,7 +43,7 @@ class DebugAutowiringCommand extends ContainerDebugCommand
         parent::__construct($name);
     }
 
-    protected function configure(): void
+    protected function configure()
     {
         $this
             ->setDefinition([
@@ -77,7 +77,9 @@ EOF
         if ($search = $input->getArgument('search')) {
             $searchNormalized = preg_replace('/[^a-zA-Z0-9\x7f-\xff $]++/', '', $search);
 
-            $serviceIds = array_filter($serviceIds, fn ($serviceId) => false !== stripos(str_replace('\\', '', $serviceId), $searchNormalized) && !str_starts_with($serviceId, '.'));
+            $serviceIds = array_filter($serviceIds, function ($serviceId) use ($searchNormalized) {
+                return false !== stripos(str_replace('\\', '', $serviceId), $searchNormalized) && !str_starts_with($serviceId, '.');
+            });
 
             if (!$serviceIds) {
                 $errorIo->error(sprintf('No autowirable classes or interfaces found matching "%s"', $search));
@@ -98,6 +100,9 @@ EOF
         $previousId = '-';
         $serviceIdsNb = 0;
         foreach ($serviceIds as $serviceId) {
+            if ($builder->hasDefinition($serviceId) && $builder->getDefinition($serviceId)->hasTag('container.excluded')) {
+                continue;
+            }
             $text = [];
             $resolvedServiceId = $serviceId;
             if (!str_starts_with($serviceId, $previousId)) {
@@ -119,12 +124,7 @@ EOF
             if ($builder->hasAlias($serviceId)) {
                 $hasAlias[$serviceId] = true;
                 $serviceAlias = $builder->getAlias($serviceId);
-
-                if ($builder->hasDefinition($serviceAlias) && $decorated = $builder->getDefinition($serviceAlias)->getTag('container.decorator')) {
-                    $serviceLine .= ' <fg=cyan>('.$decorated[0]['id'].')</>';
-                } else {
-                    $serviceLine .= ' <fg=cyan>('.$serviceAlias.')</>';
-                }
+                $serviceLine .= ' <fg=cyan>('.$serviceAlias.')</>';
 
                 if ($serviceAlias->isDeprecated()) {
                     $serviceLine .= ' - <fg=magenta>deprecated</>';
@@ -132,8 +132,6 @@ EOF
             } elseif (!$all) {
                 ++$serviceIdsNb;
                 continue;
-            } elseif ($builder->getDefinition($serviceId)->isDeprecated()) {
-                $serviceLine .= ' - <fg=magenta>deprecated</>';
             }
             $text[] = $serviceLine;
             $io->text($text);

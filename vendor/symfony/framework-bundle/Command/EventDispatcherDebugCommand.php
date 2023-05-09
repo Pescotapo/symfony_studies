@@ -46,7 +46,7 @@ class EventDispatcherDebugCommand extends Command
         $this->dispatchers = $dispatchers;
     }
 
-    protected function configure(): void
+    protected function configure()
     {
         $this
             ->setDefinition([

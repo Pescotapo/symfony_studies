@@ -38,7 +38,7 @@ final class CachePoolPruneCommand extends Command
         $this->pools = $pools;
     }
 
-    protected function configure(): void
+    protected function configure()
     {
         $this
             ->setHelp(<<<'EOF'

@@ -42,9 +42,15 @@ class TemplateCacheWarmer implements CacheWarmerInterface, ServiceSubscriberInte
     {
         $this->twig ??= $this->container->get('twig');
 
+        $files = [];
+
         foreach ($this->iterator as $template) {
             try {
-                $this->twig->load($template);
+                $template = $this->twig->load($template);
+
+                if (\is_callable([$template, 'unwrap'])) {
+                    $files[] = (new \ReflectionClass($template->unwrap()))->getFileName();
+                }
             } catch (Error) {
                 /*
                  * Problem during compilation, give up for this template (e.g. syntax errors).
@@ -57,7 +63,7 @@ class TemplateCacheWarmer implements CacheWarmerInterface, ServiceSubscriberInte
             }
         }
 
-        return [];
+        return $files;
     }
 
     public function isOptional(): bool

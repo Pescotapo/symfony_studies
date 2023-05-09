@@ -54,7 +54,7 @@ class CachingFactoryDecorator implements ChoiceListFactoryInterface, ResetInterf
         if (\is_object($value)) {
             $value = spl_object_hash($value);
         } elseif (\is_array($value)) {
-            array_walk_recursive($value, static function (&$v) {
+            array_walk_recursive($value, function (&$v) {
                 if (\is_object($v)) {
                     $v = spl_object_hash($v);
                 }
@@ -214,9 +214,6 @@ class CachingFactoryDecorator implements ChoiceListFactoryInterface, ResetInterf
         return $this->views[$hash];
     }
 
-    /**
-     * @return void
-     */
     public function reset()
     {
         $this->lists = [];

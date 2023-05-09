@@ -97,9 +97,6 @@ abstract class DoctrineType extends AbstractType implements ResetInterface
         $this->registry = $registry;
     }
 
-    /**
-     * @return void
-     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         if ($options['multiple'] && interface_exists(Collection::class)) {
@@ -110,9 +107,6 @@ abstract class DoctrineType extends AbstractType implements ResetInterface
         }
     }
 
-    /**
-     * @return void
-     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $choiceLoader = function (Options $options) {
@@ -199,13 +193,15 @@ abstract class DoctrineType extends AbstractType implements ResetInterface
 
         // Set the "id_reader" option via the normalizer. This option is not
         // supposed to be set by the user.
-        // The ID reader is a utility that is needed to read the object IDs
-        // when generating the field values. The callback generating the
-        // field values has no access to the object manager or the class
-        // of the field, so we store that information in the reader.
-        // The reader is cached so that two choice lists for the same class
-        // (and hence with the same reader) can successfully be cached.
-        $idReaderNormalizer = fn (Options $options) => $this->getCachedIdReader($options['em'], $options['class']);
+        $idReaderNormalizer = function (Options $options) {
+            // The ID reader is a utility that is needed to read the object IDs
+            // when generating the field values. The callback generating the
+            // field values has no access to the object manager or the class
+            // of the field, so we store that information in the reader.
+            // The reader is cached so that two choice lists for the same class
+            // (and hence with the same reader) can successfully be cached.
+            return $this->getCachedIdReader($options['em'], $options['class']);
+        };
 
         $resolver->setDefaults([
             'em' => null,
@@ -238,9 +234,6 @@ abstract class DoctrineType extends AbstractType implements ResetInterface
         return ChoiceType::class;
     }
 
-    /**
-     * @return void
-     */
     public function reset()
     {
         $this->idReaders = [];

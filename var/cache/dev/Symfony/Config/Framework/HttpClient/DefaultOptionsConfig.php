@@ -14,7 +14,6 @@ use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 class DefaultOptionsConfig 
 {
     private $headers;
-    private $vars;
     private $maxRedirects;
     private $httpVersion;
     private $resolve;
@@ -32,7 +31,6 @@ class DefaultOptionsConfig
     private $passphrase;
     private $ciphers;
     private $peerFingerprint;
-    private $extra;
     private $retryFailed;
     private $_usedProperties = [];
 
@@ -43,19 +41,6 @@ class DefaultOptionsConfig
     {
         $this->_usedProperties['headers'] = true;
         $this->headers[$name] = $value;
-
-        return $this;
-    }
-
-    /**
-     * @param ParamConfigurator|list<ParamConfigurator|mixed> $value
-     *
-     * @return $this
-     */
-    public function vars(ParamConfigurator|array $value): static
-    {
-        $this->_usedProperties['vars'] = true;
-        $this->vars = $value;
 
         return $this;
     }
@@ -297,19 +282,6 @@ class DefaultOptionsConfig
     }
 
     /**
-     * @param ParamConfigurator|list<ParamConfigurator|mixed> $value
-     *
-     * @return $this
-     */
-    public function extra(ParamConfigurator|array $value): static
-    {
-        $this->_usedProperties['extra'] = true;
-        $this->extra = $value;
-
-        return $this;
-    }
-
-    /**
      * @template TValue
      * @param TValue $value
      * @default {"enabled":false,"retry_strategy":null,"http_codes":[],"max_retries":3,"delay":1000,"multiplier":2,"max_delay":0,"jitter":0.1}
@@ -341,12 +313,6 @@ class DefaultOptionsConfig
             $this->_usedProperties['headers'] = true;
             $this->headers = $value['headers'];
             unset($value['headers']);
-        }
-
-        if (array_key_exists('vars', $value)) {
-            $this->_usedProperties['vars'] = true;
-            $this->vars = $value['vars'];
-            unset($value['vars']);
         }
 
         if (array_key_exists('max_redirects', $value)) {
@@ -451,12 +417,6 @@ class DefaultOptionsConfig
             unset($value['peer_fingerprint']);
         }
 
-        if (array_key_exists('extra', $value)) {
-            $this->_usedProperties['extra'] = true;
-            $this->extra = $value['extra'];
-            unset($value['extra']);
-        }
-
         if (array_key_exists('retry_failed', $value)) {
             $this->_usedProperties['retryFailed'] = true;
             $this->retryFailed = \is_array($value['retry_failed']) ? new \Symfony\Config\Framework\HttpClient\DefaultOptions\RetryFailedConfig($value['retry_failed']) : $value['retry_failed'];
@@ -473,9 +433,6 @@ class DefaultOptionsConfig
         $output = [];
         if (isset($this->_usedProperties['headers'])) {
             $output['headers'] = $this->headers;
-        }
-        if (isset($this->_usedProperties['vars'])) {
-            $output['vars'] = $this->vars;
         }
         if (isset($this->_usedProperties['maxRedirects'])) {
             $output['max_redirects'] = $this->maxRedirects;
@@ -527,9 +484,6 @@ class DefaultOptionsConfig
         }
         if (isset($this->_usedProperties['peerFingerprint'])) {
             $output['peer_fingerprint'] = $this->peerFingerprint->toArray();
-        }
-        if (isset($this->_usedProperties['extra'])) {
-            $output['extra'] = $this->extra;
         }
         if (isset($this->_usedProperties['retryFailed'])) {
             $output['retry_failed'] = $this->retryFailed instanceof \Symfony\Config\Framework\HttpClient\DefaultOptions\RetryFailedConfig ? $this->retryFailed->toArray() : $this->retryFailed;

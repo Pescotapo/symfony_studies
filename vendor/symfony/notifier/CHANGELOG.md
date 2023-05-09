@@ -1,11 +1,6 @@
 CHANGELOG
 =========
 
-6.3
----
-
- * Introduce `FromNotificationInterface` for `MessageInterface` implementations
-
 6.2
 ---
 

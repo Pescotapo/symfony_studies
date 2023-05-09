@@ -107,8 +107,6 @@ interface ConstraintViolationBuilderInterface
 
     /**
      * Adds the violation to the current execution context.
-     *
-     * @return void
      */
     public function addViolation();
 }

@@ -1,1 +1,0 @@
-# show_test_symfony

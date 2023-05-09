@@ -35,9 +35,6 @@ class HttpFoundationRequestHandler implements RequestHandlerInterface
         $this->serverParams = $serverParams ?? new ServerParams();
     }
 
-    /**
-     * @return void
-     */
     public function handleRequest(FormInterface $form, mixed $request = null)
     {
         if (!$request instanceof Request) {

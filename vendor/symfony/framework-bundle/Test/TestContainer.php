@@ -13,13 +13,12 @@ namespace Symfony\Bundle\FrameworkBundle\Test;
 
 use Psr\Container\ContainerInterface;
 use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * A special container used in tests. This gives access to both public and
- * private services. The container will not include private services that have
+ * private services. The container will not include private services that has
  * been inlined or removed. Private services will be removed when they are not
  * used by other services.
  *
@@ -29,14 +28,16 @@ use Symfony\Component\HttpKernel\KernelInterface;
  */
 class TestContainer extends Container
 {
-    public function __construct(
-        private KernelInterface $kernel,
-        private string $privateServicesLocatorId,
-        private array $renamedIds = [],
-    ) {
+    private KernelInterface $kernel;
+    private string $privateServicesLocatorId;
+
+    public function __construct(KernelInterface $kernel, string $privateServicesLocatorId)
+    {
+        $this->kernel = $kernel;
+        $this->privateServicesLocatorId = $privateServicesLocatorId;
     }
 
-    public function compile(): void
+    public function compile()
     {
         $this->getPublicContainer()->compile();
     }
@@ -61,27 +62,14 @@ class TestContainer extends Container
         return $this->getPublicContainer()->hasParameter($name);
     }
 
-    public function setParameter(string $name, mixed $value): void
+    public function setParameter(string $name, mixed $value)
     {
         $this->getPublicContainer()->setParameter($name, $value);
     }
 
-    public function set(string $id, mixed $service): void
+    public function set(string $id, mixed $service)
     {
-        $container = $this->getPublicContainer();
-        $renamedId = $this->renamedIds[$id] ?? $id;
-
-        try {
-            $container->set($renamedId, $service);
-        } catch (InvalidArgumentException $e) {
-            if (!str_starts_with($e->getMessage(), "The \"$renamedId\" service is private")) {
-                throw $e;
-            }
-            if (isset($container->privates[$renamedId])) {
-                throw new InvalidArgumentException(sprintf('The "%s" service is already initialized, you cannot replace it.', $id));
-            }
-            $container->privates[$renamedId] = $service;
-        }
+        $this->getPublicContainer()->set($id, $service);
     }
 
     public function has(string $id): bool
@@ -99,7 +87,7 @@ class TestContainer extends Container
         return $this->getPublicContainer()->initialized($id);
     }
 
-    public function reset(): void
+    public function reset()
     {
         // ignore the call
     }
@@ -116,7 +104,11 @@ class TestContainer extends Container
 
     private function getPublicContainer(): Container
     {
-        return $this->kernel->getContainer() ?? throw new \LogicException('Cannot access the container on a non-booted kernel. Did you forget to boot it?');
+        if (null === $container = $this->kernel->getContainer()) {
+            throw new \LogicException('Cannot access the container on a non-booted kernel. Did you forget to boot it?');
+        }
+
+        return $container;
     }
 
     private function getPrivateContainer(): ContainerInterface

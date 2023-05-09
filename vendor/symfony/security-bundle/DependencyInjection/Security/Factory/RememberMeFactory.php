@@ -133,7 +133,7 @@ class RememberMeFactory implements AuthenticatorFactoryInterface, PrependExtensi
         return 'remember-me';
     }
 
-    public function addConfiguration(NodeDefinition $node): void
+    public function addConfiguration(NodeDefinition $node)
     {
         $builder = $node
             ->fixXmlConfig('user_provider')
@@ -148,7 +148,7 @@ class RememberMeFactory implements AuthenticatorFactoryInterface, PrependExtensi
             ->scalarNode('service')->end()
             ->arrayNode('user_providers')
                 ->beforeNormalization()
-                    ->ifString()->then(fn ($v) => [$v])
+                    ->ifString()->then(function ($v) { return [$v]; })
                 ->end()
                 ->prototype('scalar')->end()
             ->end()
@@ -162,7 +162,7 @@ class RememberMeFactory implements AuthenticatorFactoryInterface, PrependExtensi
             ->end()
             ->arrayNode('token_provider')
                 ->beforeNormalization()
-                    ->ifString()->then(fn ($v) => ['service' => $v])
+                    ->ifString()->then(function ($v) { return ['service' => $v]; })
                 ->end()
                 ->children()
                     ->scalarNode('service')->info('The service ID of a custom rememberme token provider.')->end()
@@ -235,7 +235,7 @@ class RememberMeFactory implements AuthenticatorFactoryInterface, PrependExtensi
         return new Reference($tokenVerifierId, ContainerInterface::NULL_ON_INVALID_REFERENCE);
     }
 
-    public function prepend(ContainerBuilder $container): void
+    public function prepend(ContainerBuilder $container)
     {
         $rememberMeSecureDefault = false;
         $rememberMeSameSiteDefault = null;

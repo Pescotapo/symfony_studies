@@ -25,9 +25,6 @@ use Symfony\Component\Form\Exception\UnexpectedTypeException;
  */
 class CheckboxListMapper implements DataMapperInterface
 {
-    /**
-     * @return void
-     */
     public function mapDataToForms(mixed $choices, \Traversable $checkboxes)
     {
         if (!\is_array($choices ??= [])) {
@@ -40,9 +37,6 @@ class CheckboxListMapper implements DataMapperInterface
         }
     }
 
-    /**
-     * @return void
-     */
     public function mapFormsToData(\Traversable $checkboxes, mixed &$choices)
     {
         if (!\is_array($choices)) {

@@ -44,7 +44,7 @@ class TextDescriptor extends Descriptor
         $this->fileLinkFormatter = $fileLinkFormatter;
     }
 
-    protected function describeRouteCollection(RouteCollection $routes, array $options = []): void
+    protected function describeRouteCollection(RouteCollection $routes, array $options = [])
     {
         $showControllers = isset($options['show_controllers']) && $options['show_controllers'];
 
@@ -81,7 +81,7 @@ class TextDescriptor extends Descriptor
         }
     }
 
-    protected function describeRoute(Route $route, array $options = []): void
+    protected function describeRoute(Route $route, array $options = [])
     {
         $defaults = $route->getDefaults();
         if (isset($defaults['_controller'])) {
@@ -112,7 +112,7 @@ class TextDescriptor extends Descriptor
         $table->render();
     }
 
-    protected function describeContainerParameters(ParameterBag $parameters, array $options = []): void
+    protected function describeContainerParameters(ParameterBag $parameters, array $options = [])
     {
         $tableHeaders = ['Parameter', 'Value'];
 
@@ -125,7 +125,7 @@ class TextDescriptor extends Descriptor
         $options['output']->table($tableHeaders, $tableRows);
     }
 
-    protected function describeContainerTags(ContainerBuilder $builder, array $options = []): void
+    protected function describeContainerTags(ContainerBuilder $builder, array $options = [])
     {
         $showHidden = isset($options['show_hidden']) && $options['show_hidden'];
 
@@ -141,7 +141,7 @@ class TextDescriptor extends Descriptor
         }
     }
 
-    protected function describeContainerService(object $service, array $options = [], ContainerBuilder $builder = null): void
+    protected function describeContainerService(object $service, array $options = [], ContainerBuilder $builder = null)
     {
         if (!isset($options['id'])) {
             throw new \InvalidArgumentException('An "id" option must be provided.');
@@ -162,7 +162,7 @@ class TextDescriptor extends Descriptor
         }
     }
 
-    protected function describeContainerServices(ContainerBuilder $builder, array $options = []): void
+    protected function describeContainerServices(ContainerBuilder $builder, array $options = [])
     {
         $showHidden = isset($options['show_hidden']) && $options['show_hidden'];
         $showTag = $options['tag'] ?? null;
@@ -251,7 +251,7 @@ class TextDescriptor extends Descriptor
         $options['output']->table($tableHeaders, $tableRows);
     }
 
-    protected function describeContainerDefinition(Definition $definition, array $options = [], ContainerBuilder $builder = null): void
+    protected function describeContainerDefinition(Definition $definition, array $options = [], ContainerBuilder $builder = null)
     {
         if (isset($options['id'])) {
             $options['output']->title(sprintf('Information for Service "<info>%s</info>"', $options['id']));
@@ -271,7 +271,9 @@ class TextDescriptor extends Descriptor
             $tagInformation = [];
             foreach ($tags as $tagName => $tagData) {
                 foreach ($tagData as $tagParameters) {
-                    $parameters = array_map(fn ($key, $value) => sprintf('<info>%s</info>: %s', $key, $value), array_keys($tagParameters), array_values($tagParameters));
+                    $parameters = array_map(function ($key, $value) {
+                        return sprintf('<info>%s</info>: %s', $key, $value);
+                    }, array_keys($tagParameters), array_values($tagParameters));
                     $parameters = implode(', ', $parameters);
 
                     if ('' === $parameters) {
@@ -359,7 +361,7 @@ class TextDescriptor extends Descriptor
         }
 
         $inEdges = null !== $builder && isset($options['id']) ? $this->getServiceEdges($builder, $options['id']) : [];
-        $tableRows[] = ['Usages', $inEdges ? implode(', ', $inEdges) : 'none'];
+        $tableRows[] = ['Usages', $inEdges ? implode(\PHP_EOL, $inEdges) : 'none'];
 
         $options['output']->table($tableHeaders, $tableRows);
     }
@@ -390,7 +392,7 @@ class TextDescriptor extends Descriptor
         $options['output']->listing($formattedLogs);
     }
 
-    protected function describeContainerAlias(Alias $alias, array $options = [], ContainerBuilder $builder = null): void
+    protected function describeContainerAlias(Alias $alias, array $options = [], ContainerBuilder $builder = null)
     {
         if ($alias->isPublic() && !$alias->isPrivate()) {
             $options['output']->comment(sprintf('This service is a <info>public</info> alias for the service <info>%s</info>', (string) $alias));
@@ -405,7 +407,7 @@ class TextDescriptor extends Descriptor
         $this->describeContainerDefinition($builder->getDefinition((string) $alias), array_merge($options, ['id' => (string) $alias]), $builder);
     }
 
-    protected function describeContainerParameter(mixed $parameter, array $options = []): void
+    protected function describeContainerParameter(mixed $parameter, array $options = [])
     {
         $options['output']->table(
             ['Parameter', 'Value'],
@@ -415,7 +417,7 @@ class TextDescriptor extends Descriptor
         ]);
     }
 
-    protected function describeContainerEnvVars(array $envs, array $options = []): void
+    protected function describeContainerEnvVars(array $envs, array $options = [])
     {
         $dump = new Dumper($this->output);
         $options['output']->title('Symfony Container Environment Variables');
@@ -477,7 +479,7 @@ class TextDescriptor extends Descriptor
         }
     }
 
-    protected function describeEventDispatcherListeners(EventDispatcherInterface $eventDispatcher, array $options = []): void
+    protected function describeEventDispatcherListeners(EventDispatcherInterface $eventDispatcher, array $options = [])
     {
         $event = $options['event'] ?? null;
         $dispatcherServiceName = $options['dispatcher_service_name'] ?? null;
@@ -494,7 +496,7 @@ class TextDescriptor extends Descriptor
         } else {
             $title .= ' Grouped by Event';
             // Try to see if "events" exists
-            $registeredListeners = \array_key_exists('events', $options) ? array_combine($options['events'], array_map(fn ($event) => $eventDispatcher->getListeners($event), $options['events'])) : $eventDispatcher->getListeners();
+            $registeredListeners = \array_key_exists('events', $options) ? array_combine($options['events'], array_map(function ($event) use ($eventDispatcher) { return $eventDispatcher->getListeners($event); }, $options['events'])) : $eventDispatcher->getListeners();
         }
 
         $options['output']->title($title);
@@ -509,12 +511,12 @@ class TextDescriptor extends Descriptor
         }
     }
 
-    protected function describeCallable(mixed $callable, array $options = []): void
+    protected function describeCallable(mixed $callable, array $options = [])
     {
         $this->writeText($this->formatCallable($callable), $options);
     }
 
-    private function renderEventListenerTable(EventDispatcherInterface $eventDispatcher, string $event, array $eventListeners, SymfonyStyle $io): void
+    private function renderEventListenerTable(EventDispatcherInterface $eventDispatcher, string $event, array $eventListeners, SymfonyStyle $io)
     {
         $tableHeaders = ['Order', 'Callable', 'Priority'];
         $tableRows = [];
@@ -600,7 +602,7 @@ class TextDescriptor extends Descriptor
     {
         if (\is_array($callable)) {
             if (\is_object($callable[0])) {
-                return sprintf('%s::%s()', $callable[0]::class, $callable[1]);
+                return sprintf('%s::%s()', \get_class($callable[0]), $callable[1]);
             }
 
             return sprintf('%s::%s()', $callable[0], $callable[1]);
@@ -629,7 +631,7 @@ class TextDescriptor extends Descriptor
         throw new \InvalidArgumentException('Callable is not describable.');
     }
 
-    private function writeText(string $content, array $options = []): void
+    private function writeText(string $content, array $options = [])
     {
         $this->write(
             isset($options['raw_text']) && $options['raw_text'] ? strip_tags($content) : $content,

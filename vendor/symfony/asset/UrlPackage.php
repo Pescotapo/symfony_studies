@@ -110,7 +110,7 @@ class UrlPackage extends Package
         return abs(crc32($path)) % \count($this->baseUrls);
     }
 
-    private function getSslUrls(array $urls): array
+    private function getSslUrls(array $urls)
     {
         $sslUrls = [];
         foreach ($urls as $url) {

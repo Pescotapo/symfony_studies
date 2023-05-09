@@ -63,9 +63,6 @@ class Compiler implements ResetInterface
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function subcompile(Node\Node $node)
     {
         $current = $this->source;

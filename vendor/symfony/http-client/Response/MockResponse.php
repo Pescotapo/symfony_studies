@@ -26,7 +26,9 @@ use Symfony\Contracts\HttpClient\ResponseInterface;
 class MockResponse implements ResponseInterface, StreamableInterface
 {
     use CommonResponseTrait;
-    use TransportResponseTrait;
+    use TransportResponseTrait {
+        doDestruct as public __destruct;
+    }
 
     private string|iterable $body;
     private array $requestOptions = [];
@@ -102,11 +104,10 @@ class MockResponse implements ResponseInterface, StreamableInterface
         } catch (TransportException $e) {
             // ignore errors when canceling
         }
-    }
 
-    public function __destruct()
-    {
-        $this->doDestruct();
+        $onProgress = $this->requestOptions['on_progress'] ?? static function () {};
+        $dlSize = isset($this->headers['content-encoding']) || 'HEAD' === ($this->info['http_method'] ?? null) || \in_array($this->info['http_code'], [204, 304], true) ? 0 : (int) ($this->headers['content-length'][0] ?? 0);
+        $onProgress($this->offset, $dlSize, $this->info);
     }
 
     protected function close(): void
@@ -124,7 +125,9 @@ class MockResponse implements ResponseInterface, StreamableInterface
         $response->requestOptions = $options;
         $response->id = ++self::$idSequence;
         $response->shouldBuffer = $options['buffer'] ?? true;
-        $response->initializer = static fn (self $response) => \is_array($response->body[0] ?? null);
+        $response->initializer = static function (self $response) {
+            return \is_array($response->body[0] ?? null);
+        };
 
         $response->info['redirect_count'] = 0;
         $response->info['redirect_url'] = null;
@@ -187,6 +190,11 @@ class MockResponse implements ResponseInterface, StreamableInterface
                     $chunk[1]->getHeaders(false);
                     self::readResponse($response, $chunk[0], $chunk[1], $offset);
                     $multi->handlesActivity[$id][] = new FirstChunk();
+                    $buffer = $response->requestOptions['buffer'] ?? null;
+
+                    if ($buffer instanceof \Closure && $response->content = $buffer($response->headers) ?: null) {
+                        $response->content = \is_resource($response->content) ? $response->content : fopen('php://temp', 'w+');
+                    }
                 } catch (\Throwable $e) {
                     $multi->handlesActivity[$id][] = null;
                     $multi->handlesActivity[$id][] = $e;

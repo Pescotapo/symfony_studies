@@ -64,7 +64,9 @@ class ArrayChoiceList implements ChoiceListInterface
         }
 
         if (null === $value && $this->castableToString($choices)) {
-            $value = fn ($choice) => false === $choice ? '0' : (string) $choice;
+            $value = function ($choice) {
+                return false === $choice ? '0' : (string) $choice;
+            };
         }
 
         if (null !== $value) {
@@ -72,9 +74,8 @@ class ArrayChoiceList implements ChoiceListInterface
             $this->valueCallback = $value;
         } else {
             // Otherwise generate incrementing integers as values
-            $value = function () {
-                static $i = 0;
-
+            $i = 0;
+            $value = function () use (&$i) {
                 return $i++;
             };
         }
@@ -163,7 +164,7 @@ class ArrayChoiceList implements ChoiceListInterface
      *
      * @internal
      */
-    protected function flatten(array $choices, callable $value, ?array &$choicesByValues, ?array &$keysByValues, ?array &$structuredValues): void
+    protected function flatten(array $choices, callable $value, ?array &$choicesByValues, ?array &$keysByValues, ?array &$structuredValues)
     {
         if (null === $choicesByValues) {
             $choicesByValues = [];

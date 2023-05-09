@@ -108,7 +108,7 @@ class ConstraintViolationBuilder implements ConstraintViolationBuilderInterface
         return $this;
     }
 
-    public function addViolation(): void
+    public function addViolation()
     {
         if (null === $this->plural) {
             $translatedMessage = $this->translator->trans(

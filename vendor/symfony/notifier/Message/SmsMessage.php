@@ -18,16 +18,14 @@ use Symfony\Component\Notifier\Recipient\SmsRecipientInterface;
 /**
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class SmsMessage implements MessageInterface, FromNotificationInterface
+class SmsMessage implements MessageInterface
 {
     private ?string $transport = null;
     private string $subject;
     private string $phone;
     private string $from;
-    private ?MessageOptionsInterface $options;
-    private ?Notification $notification = null;
 
-    public function __construct(string $phone, string $subject, string $from = '', MessageOptionsInterface $options = null)
+    public function __construct(string $phone, string $subject, string $from = '')
     {
         if ('' === $phone) {
             throw new InvalidArgumentException(sprintf('"%s" needs a phone number, it cannot be empty.', __CLASS__));
@@ -36,15 +34,11 @@ class SmsMessage implements MessageInterface, FromNotificationInterface
         $this->subject = $subject;
         $this->phone = $phone;
         $this->from = $from;
-        $this->options = $options;
     }
 
     public static function fromNotification(Notification $notification, SmsRecipientInterface $recipient): self
     {
-        $message = new self($recipient->getPhone(), $notification->getSubject());
-        $message->notification = $notification;
-
-        return $message;
+        return new self($recipient->getPhone(), $notification->getSubject());
     }
 
     /**
@@ -116,23 +110,8 @@ class SmsMessage implements MessageInterface, FromNotificationInterface
         return $this->from;
     }
 
-    /**
-     * @return $this
-     */
-    public function options(MessageOptionsInterface $options): static
-    {
-        $this->options = $options;
-
-        return $this;
-    }
-
     public function getOptions(): ?MessageOptionsInterface
     {
-        return $this->options;
-    }
-
-    public function getNotification(): ?Notification
-    {
-        return $this->notification;
+        return null;
     }
 }

@@ -92,9 +92,6 @@ class FormView implements \ArrayAccess, \IteratorAggregate, \Countable
         return $this->methodRendered;
     }
 
-    /**
-     * @return void
-     */
     public function setMethodRendered()
     {
         $this->methodRendered = true;

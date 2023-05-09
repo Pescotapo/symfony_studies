@@ -187,7 +187,7 @@ class ValidatorBuilder
     }
 
     /**
-     * Enables annotation and attribute based constraint mapping.
+     * Enables annotation based constraint mapping.
      *
      * @return $this
      */
@@ -203,7 +203,7 @@ class ValidatorBuilder
     }
 
     /**
-     * Disables annotation and attribute based constraint mapping.
+     * Disables annotation based constraint mapping.
      *
      * @return $this
      */

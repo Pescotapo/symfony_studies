@@ -52,7 +52,7 @@ class AssetsInstallCommand extends Command
         $this->projectDir = $projectDir;
     }
 
-    protected function configure(): void
+    protected function configure()
     {
         $this
             ->setDefinition([
@@ -226,7 +226,7 @@ EOT
      *
      * @throws IOException if link cannot be created
      */
-    private function symlink(string $originDir, string $targetDir, bool $relative = false): void
+    private function symlink(string $originDir, string $targetDir, bool $relative = false)
     {
         if ($relative) {
             $this->filesystem->mkdir(\dirname($targetDir));

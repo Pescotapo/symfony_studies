@@ -1,5 +1,7 @@
 {% extends '@WebProfiler/Profiler/layout.html.twig' %}
 
+{% import _self as helper %}
+
 {% block toolbar %}
     {% if collector.messages|length %}
         {% set icon %}
@@ -103,7 +105,7 @@
                         </div>
                     {% else %}
                         {% block defined_messages %}
-                            {{ _self.render_table(messages_defined) }}
+                            {{ helper.render_table(messages_defined) }}
                         {% endblock %}
                     {% endif %}
                 </div>
@@ -124,7 +126,7 @@
                         </div>
                     {% else %}
                         {% block fallback_messages %}
-                            {{ _self.render_table(messages_fallback, true) }}
+                            {{ helper.render_table(messages_fallback, true) }}
                         {% endblock %}
                     {% endif %}
                 </div>
@@ -146,7 +148,7 @@
                         </div>
                     {% else %}
                         {% block missing_messages %}
-                            {{ _self.render_table(messages_missing) }}
+                            {{ helper.render_table(messages_missing) }}
                         {% endblock %}
                     {% endif %}
                 </div>

@@ -87,7 +87,7 @@ class UndefinedCallableHandler
         }
 
         if ('webpack-encore-bundle' === self::FUNCTION_COMPONENTS[$name]) {
-            return new TwigFunction($name, static fn () => '');
+            return new TwigFunction($name, static function () { return ''; });
         }
 
         throw new SyntaxError(self::onUndefined($name, 'function', self::FUNCTION_COMPONENTS[$name]));

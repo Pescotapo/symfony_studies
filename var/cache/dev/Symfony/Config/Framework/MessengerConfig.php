@@ -21,13 +21,12 @@ class MessengerConfig
     private $transports;
     private $failureTransport;
     private $resetOnMessage;
-    private $stopWorkerOnSignals;
     private $defaultBus;
     private $buses;
     private $_usedProperties = [];
 
     /**
-     * @default true
+     * @default false
      * @param ParamConfigurator|bool $value
      * @return $this
      */
@@ -134,19 +133,6 @@ class MessengerConfig
     }
 
     /**
-     * @param ParamConfigurator|list<ParamConfigurator|int> $value
-     *
-     * @return $this
-     */
-    public function stopWorkerOnSignals(ParamConfigurator|array $value): static
-    {
-        $this->_usedProperties['stopWorkerOnSignals'] = true;
-        $this->stopWorkerOnSignals = $value;
-
-        return $this;
-    }
-
-    /**
      * @default null
      * @param ParamConfigurator|mixed $value
      * @return $this
@@ -212,12 +198,6 @@ class MessengerConfig
             unset($value['reset_on_message']);
         }
 
-        if (array_key_exists('stop_worker_on_signals', $value)) {
-            $this->_usedProperties['stopWorkerOnSignals'] = true;
-            $this->stopWorkerOnSignals = $value['stop_worker_on_signals'];
-            unset($value['stop_worker_on_signals']);
-        }
-
         if (array_key_exists('default_bus', $value)) {
             $this->_usedProperties['defaultBus'] = true;
             $this->defaultBus = $value['default_bus'];
@@ -255,9 +235,6 @@ class MessengerConfig
         }
         if (isset($this->_usedProperties['resetOnMessage'])) {
             $output['reset_on_message'] = $this->resetOnMessage;
-        }
-        if (isset($this->_usedProperties['stopWorkerOnSignals'])) {
-            $output['stop_worker_on_signals'] = $this->stopWorkerOnSignals;
         }
         if (isset($this->_usedProperties['defaultBus'])) {
             $output['default_bus'] = $this->defaultBus;

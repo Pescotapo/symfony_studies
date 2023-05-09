@@ -43,8 +43,6 @@ class DataCollectorListener implements EventSubscriberInterface
 
     /**
      * Listener for the {@link FormEvents::POST_SET_DATA} event.
-     *
-     * @return void
      */
     public function postSetData(FormEvent $event)
     {
@@ -59,8 +57,6 @@ class DataCollectorListener implements EventSubscriberInterface
 
     /**
      * Listener for the {@link FormEvents::POST_SUBMIT} event.
-     *
-     * @return void
      */
     public function postSubmit(FormEvent $event)
     {

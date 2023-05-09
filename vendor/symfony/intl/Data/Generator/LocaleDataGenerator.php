@@ -42,7 +42,7 @@ class LocaleDataGenerator extends AbstractDataGenerator
         return $this->locales;
     }
 
-    protected function compileTemporaryBundles(BundleCompilerInterface $compiler, string $sourceDir, string $tempDir): void
+    protected function compileTemporaryBundles(BundleCompilerInterface $compiler, string $sourceDir, string $tempDir)
     {
         $filesystem = new Filesystem();
         $filesystem->mkdir([
@@ -53,7 +53,7 @@ class LocaleDataGenerator extends AbstractDataGenerator
         $compiler->compile($sourceDir.'/region', $tempDir.'/region');
     }
 
-    protected function preGenerate(): void
+    protected function preGenerate()
     {
         // Write parents locale file for the Translation component
         file_put_contents(

@@ -38,9 +38,6 @@ class TraceableValidator implements ValidatorInterface, ResetInterface
         return $this->collectedData;
     }
 
-    /**
-     * @return void
-     */
     public function reset()
     {
         $this->collectedData = [];

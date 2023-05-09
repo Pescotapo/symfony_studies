@@ -104,10 +104,14 @@ class FileType extends AbstractType
     {
         $dataClass = null;
         if (class_exists(File::class)) {
-            $dataClass = static fn (Options $options) => $options['multiple'] ? null : File::class;
+            $dataClass = function (Options $options) {
+                return $options['multiple'] ? null : File::class;
+            };
         }
 
-        $emptyData = static fn (Options $options) => $options['multiple'] ? [] : null;
+        $emptyData = function (Options $options) {
+            return $options['multiple'] ? [] : null;
+        };
 
         $resolver->setDefaults([
             'compound' => false,
@@ -124,7 +128,7 @@ class FileType extends AbstractType
         return 'file';
     }
 
-    private function getFileUploadError(int $errorCode): FileUploadError
+    private function getFileUploadError(int $errorCode)
     {
         $messageParameters = [];
 
@@ -191,7 +195,7 @@ class FileType extends AbstractType
      *
      * This method should be kept in sync with Symfony\Component\Validator\Constraints\FileValidator::factorizeSizes().
      */
-    private function factorizeSizes(int $size, int|float $limit): array
+    private function factorizeSizes(int $size, int|float $limit)
     {
         $coef = self::MIB_BYTES;
         $coefFactor = self::KIB_BYTES;

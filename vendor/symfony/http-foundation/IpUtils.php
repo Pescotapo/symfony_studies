@@ -18,21 +18,6 @@ namespace Symfony\Component\HttpFoundation;
  */
 class IpUtils
 {
-    public const PRIVATE_SUBNETS = [
-        '127.0.0.0/8',    // RFC1700 (Loopback)
-        '10.0.0.0/8',     // RFC1918
-        '192.168.0.0/16', // RFC1918
-        '172.16.0.0/12',  // RFC1918
-        '169.254.0.0/16', // RFC3927
-        '0.0.0.0/8',      // RFC5735
-        '240.0.0.0/4',    // RFC1112
-        '::1/128',        // Loopback
-        'fc00::/7',       // Unique Local Address
-        'fe80::/10',      // Link Local Address
-        '::ffff:0:0/96',  // IPv4 translations
-        '::/128',         // Unspecified address
-    ];
-
     private static array $checkedIps = [];
 
     /**
@@ -74,7 +59,7 @@ class IpUtils
      */
     public static function checkIp4(string $requestIp, string $ip): bool
     {
-        $cacheKey = $requestIp.'-'.$ip;
+        $cacheKey = $requestIp.'-'.$ip.'-v4';
         if (isset(self::$checkedIps[$cacheKey])) {
             return self::$checkedIps[$cacheKey];
         }
@@ -119,7 +104,7 @@ class IpUtils
      */
     public static function checkIp6(string $requestIp, string $ip): bool
     {
-        $cacheKey = $requestIp.'-'.$ip;
+        $cacheKey = $requestIp.'-'.$ip.'-v6';
         if (isset(self::$checkedIps[$cacheKey])) {
             return self::$checkedIps[$cacheKey];
         }
@@ -205,13 +190,5 @@ class IpUtils
         }
 
         return $ip;
-    }
-
-    /**
-     * Checks if an IPv4 or IPv6 address is contained in the list of private IP subnets.
-     */
-    public static function isPrivateIp(string $requestIp): bool
-    {
-        return self::checkIp($requestIp, self::PRIVATE_SUBNETS);
     }
 }

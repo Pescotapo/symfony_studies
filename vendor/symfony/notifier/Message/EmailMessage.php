@@ -23,11 +23,10 @@ use Symfony\Component\Notifier\Recipient\EmailRecipientInterface;
 /**
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class EmailMessage implements MessageInterface, FromNotificationInterface
+class EmailMessage implements MessageInterface
 {
     private RawMessage $message;
     private ?Envelope $envelope;
-    private ?Notification $notification = null;
 
     public function __construct(RawMessage $message, Envelope $envelope = null)
     {
@@ -60,10 +59,7 @@ class EmailMessage implements MessageInterface, FromNotificationInterface
             }
         }
 
-        $message = new self($email);
-        $message->notification = $notification;
-
-        return $message;
+        return new self($email);
     }
 
     public function getMessage(): RawMessage
@@ -121,10 +117,5 @@ class EmailMessage implements MessageInterface, FromNotificationInterface
     public function getTransport(): ?string
     {
         return $this->message instanceof Email ? $this->message->getHeaders()->getHeaderBody('X-Transport') : null;
-    }
-
-    public function getNotification(): ?Notification
-    {
-        return $this->notification;
     }
 }

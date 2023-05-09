@@ -47,17 +47,12 @@ class DoctrineDataCollector extends DataCollector
 
     /**
      * Adds the stack logger for a connection.
-     *
-     * @return void
      */
     public function addLogger(string $name, DebugStack $logger)
     {
         $this->loggers[$name] = $logger;
     }
 
-    /**
-     * @return void
-     */
     public function collect(Request $request, Response $response, \Throwable $exception = null)
     {
         $this->data = [
@@ -86,9 +81,6 @@ class DoctrineDataCollector extends DataCollector
         return $queries;
     }
 
-    /**
-     * @return void
-     */
     public function reset()
     {
         $this->data = [];
@@ -115,9 +107,6 @@ class DoctrineDataCollector extends DataCollector
         return $this->data['connections'];
     }
 
-    /**
-     * @return int
-     */
     public function getQueryCount()
     {
         return array_sum(array_map('count', $this->data['queries']));

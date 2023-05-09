@@ -43,9 +43,6 @@ class DebugCommand extends Command
         $this->validator = $validator;
     }
 
-    /**
-     * @return void
-     */
     protected function configure()
     {
         $this

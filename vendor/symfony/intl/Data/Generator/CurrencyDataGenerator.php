@@ -53,13 +53,13 @@ class CurrencyDataGenerator extends AbstractDataGenerator
         return $scanner->scanLocales($sourceDir.'/curr');
     }
 
-    protected function compileTemporaryBundles(BundleCompilerInterface $compiler, string $sourceDir, string $tempDir): void
+    protected function compileTemporaryBundles(BundleCompilerInterface $compiler, string $sourceDir, string $tempDir)
     {
         $compiler->compile($sourceDir.'/curr', $tempDir);
         $compiler->compile($sourceDir.'/misc/currencyNumericCodes.txt', $tempDir);
     }
 
-    protected function preGenerate(): void
+    protected function preGenerate()
     {
         $this->currencyCodes = [];
     }
@@ -112,7 +112,9 @@ class CurrencyDataGenerator extends AbstractDataGenerator
 
     private function generateSymbolNamePairs(ArrayAccessibleResourceBundle $rootBundle): array
     {
-        $symbolNamePairs = array_map(fn ($pair) => \array_slice(iterator_to_array($pair), 0, 2), iterator_to_array($rootBundle['Currencies']));
+        $symbolNamePairs = array_map(function ($pair) {
+            return \array_slice(iterator_to_array($pair), 0, 2);
+        }, iterator_to_array($rootBundle['Currencies']));
 
         // Remove unwanted currencies
         $symbolNamePairs = array_diff_key($symbolNamePairs, self::DENYLIST);

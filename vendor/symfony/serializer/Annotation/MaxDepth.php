@@ -32,9 +32,6 @@ class MaxDepth
         }
     }
 
-    /**
-     * @return int
-     */
     public function getMaxDepth()
     {
         return $this->maxDepth;

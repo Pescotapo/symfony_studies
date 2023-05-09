@@ -31,9 +31,6 @@ class ButtonType extends BaseType implements ButtonTypeInterface
         return 'button';
     }
 
-    /**
-     * @return void
-     */
     public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);

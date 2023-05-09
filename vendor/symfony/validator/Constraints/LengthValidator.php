@@ -21,9 +21,6 @@ use Symfony\Component\Validator\Exception\UnexpectedValueException;
  */
 class LengthValidator extends ConstraintValidator
 {
-    /**
-     * @return void
-     */
     public function validate(mixed $value, Constraint $constraint)
     {
         if (!$constraint instanceof Length) {
@@ -54,13 +51,7 @@ class LengthValidator extends ConstraintValidator
             $invalidCharset = true;
         }
 
-        $length = $invalidCharset ? 0 : match ($constraint->countUnit) {
-            Length::COUNT_BYTES => \strlen($stringValue),
-            Length::COUNT_CODEPOINTS => mb_strlen($stringValue, $constraint->charset),
-            Length::COUNT_GRAPHEMES => grapheme_strlen($stringValue),
-        };
-
-        if ($invalidCharset || false === ($length ?? false)) {
+        if ($invalidCharset) {
             $this->context->buildViolation($constraint->charsetMessage)
                 ->setParameter('{{ value }}', $this->formatValue($stringValue))
                 ->setParameter('{{ charset }}', $constraint->charset)
@@ -70,6 +61,8 @@ class LengthValidator extends ConstraintValidator
 
             return;
         }
+
+        $length = mb_strlen($stringValue, $constraint->charset);
 
         if (null !== $constraint->max && $length > $constraint->max) {
             $exactlyOptionEnabled = $constraint->min == $constraint->max;

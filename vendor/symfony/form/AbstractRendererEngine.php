@@ -61,9 +61,6 @@ abstract class AbstractRendererEngine implements FormRendererEngineInterface, Re
         $this->defaultThemes = $defaultThemes;
     }
 
-    /**
-     * @return void
-     */
     public function setTheme(FormView $view, mixed $themes, bool $useDefaultThemes = true)
     {
         $cacheKey = $view->vars[self::CACHE_KEY_VAR];

@@ -40,7 +40,7 @@ final class DotenvDumpCommand extends Command
         parent::__construct();
     }
 
-    protected function configure(): void
+    protected function configure()
     {
         $this
             ->setDefinition([

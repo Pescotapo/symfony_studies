@@ -48,9 +48,6 @@ class LintCommand extends Command
         parent::__construct();
     }
 
-    /**
-     * @return void
-     */
     protected function configure()
     {
         $this
@@ -182,7 +179,7 @@ EOF
         };
     }
 
-    private function displayTxt(OutputInterface $output, SymfonyStyle $io, array $filesInfo, bool $errorAsGithubAnnotations = false): int
+    private function displayTxt(OutputInterface $output, SymfonyStyle $io, array $filesInfo, bool $errorAsGithubAnnotations = false)
     {
         $errors = 0;
         $githubReporter = $errorAsGithubAnnotations ? new GithubActionReporter($output) : null;
@@ -257,7 +254,7 @@ EOF
         }
     }
 
-    private function getContext(string $template, int $line, int $context = 3): array
+    private function getContext(string $template, int $line, int $context = 3)
     {
         $lines = explode("\n", $template);
 

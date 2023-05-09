@@ -27,7 +27,7 @@ class FormDataExtractor implements FormDataExtractorInterface
         $data = [
             'id' => $this->buildId($form),
             'name' => $form->getName(),
-            'type_class' => $form->getConfig()->getType()->getInnerType()::class,
+            'type_class' => \get_class($form->getConfig()->getType()->getInnerType()),
             'synchronized' => $form->isSynchronized(),
             'passed_options' => [],
             'resolved_options' => [],

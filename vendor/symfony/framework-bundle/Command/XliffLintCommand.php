@@ -36,12 +36,14 @@ class XliffLintCommand extends BaseLintCommand
             return $default($directory);
         };
 
-        $isReadableProvider = fn ($fileOrDirectory, $default) => str_starts_with($fileOrDirectory, '@') || $default($fileOrDirectory);
+        $isReadableProvider = function ($fileOrDirectory, $default) {
+            return str_starts_with($fileOrDirectory, '@') || $default($fileOrDirectory);
+        };
 
         parent::__construct(null, $directoryIteratorProvider, $isReadableProvider);
     }
 
-    protected function configure(): void
+    protected function configure()
     {
         parent::configure();
 

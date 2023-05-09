@@ -1,12 +1,6 @@
 CHANGELOG
 =========
 
-6.3
----
-
- * Add `MessageEvent::reject()` to allow rejecting an email before sending it
- * Change the default port for the `mailgun+smtp` transport from 465 to 587
-
 6.2.7
 -----
 

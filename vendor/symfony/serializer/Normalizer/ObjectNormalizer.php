@@ -44,21 +44,13 @@ class ObjectNormalizer extends AbstractObjectNormalizer
 
         $this->propertyAccessor = $propertyAccessor ?: PropertyAccess::createPropertyAccessor();
 
-        $this->objectClassResolver = $objectClassResolver ?? fn ($class) => \is_object($class) ? $class::class : $class;
+        $this->objectClassResolver = $objectClassResolver ?? function ($class) {
+            return \is_object($class) ? $class::class : $class;
+        };
     }
 
-    public function getSupportedTypes(?string $format): array
-    {
-        return ['object' => __CLASS__ === static::class || $this->hasCacheableSupportsMethod()];
-    }
-
-    /**
-     * @deprecated since Symfony 6.3, use "getSupportedTypes()" instead
-     */
     public function hasCacheableSupportsMethod(): bool
     {
-        trigger_deprecation('symfony/serializer', '6.3', 'The "%s()" method is deprecated, use "getSupportedTypes()" instead.', __METHOD__);
-
         return __CLASS__ === static::class;
     }
 
@@ -139,9 +131,6 @@ class ObjectNormalizer extends AbstractObjectNormalizer
         return $attribute === $this->discriminatorCache[$cacheKey] ? $this->classDiscriminatorResolver->getTypeForMappedObject($object) : $this->propertyAccessor->getValue($object, $attribute);
     }
 
-    /**
-     * @return void
-     */
     protected function setAttributeValue(object $object, string $attribute, mixed $value, string $format = null, array $context = [])
     {
         try {

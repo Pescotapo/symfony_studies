@@ -38,7 +38,7 @@ final class SecretsEncryptFromLocalCommand extends Command
         parent::__construct();
     }
 
-    protected function configure(): void
+    protected function configure()
     {
         $this
             ->setHelp(<<<'EOF'

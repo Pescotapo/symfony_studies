@@ -73,7 +73,7 @@ class TranslationDebugCommand extends Command
         $this->enabledLocales = $enabledLocales;
     }
 
-    protected function configure(): void
+    protected function configure()
     {
         $this
             ->setDefinition([

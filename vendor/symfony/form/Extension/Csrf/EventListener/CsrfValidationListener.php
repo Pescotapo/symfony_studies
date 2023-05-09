@@ -51,9 +51,6 @@ class CsrfValidationListener implements EventSubscriberInterface
         $this->serverParams = $serverParams ?? new ServerParams();
     }
 
-    /**
-     * @return void
-     */
     public function preSubmit(FormEvent $event)
     {
         $form = $event->getForm();

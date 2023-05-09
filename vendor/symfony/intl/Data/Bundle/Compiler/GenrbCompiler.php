@@ -43,7 +43,7 @@ class GenrbCompiler implements BundleCompilerInterface
         $this->genrb = ($envVars ? $envVars.' ' : '').$genrb;
     }
 
-    public function compile(string $sourcePath, string $targetDir): void
+    public function compile(string $sourcePath, string $targetDir)
     {
         if (is_dir($sourcePath)) {
             $sourcePath .= '/*.txt';

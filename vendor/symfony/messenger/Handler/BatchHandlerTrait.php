@@ -55,7 +55,7 @@ trait BatchHandlerTrait
 
     private function shouldFlush(): bool
     {
-        return $this->getBatchSize() <= \count($this->jobs);
+        return 10 <= \count($this->jobs);
     }
 
     /**
@@ -64,9 +64,4 @@ trait BatchHandlerTrait
      * @list<array{0: object, 1: Acknowledger}> $jobs A list of pairs of messages and their corresponding acknowledgers
      */
     abstract private function process(array $jobs): void;
-
-    private function getBatchSize(): int
-    {
-        return 10;
-    }
 }

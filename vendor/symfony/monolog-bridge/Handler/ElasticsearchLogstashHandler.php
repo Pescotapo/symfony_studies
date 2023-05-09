@@ -106,7 +106,7 @@ class ElasticsearchLogstashHandler extends AbstractHandler
         return new LogstashFormatter('application');
     }
 
-    private function sendToElasticsearch(array $records): void
+    private function sendToElasticsearch(array $records)
     {
         $formatter = $this->getFormatter();
 
@@ -164,7 +164,7 @@ class ElasticsearchLogstashHandler extends AbstractHandler
         $this->wait(true);
     }
 
-    private function wait(bool $blocking): void
+    private function wait(bool $blocking)
     {
         foreach ($this->client->stream($this->responses, $blocking ? null : 0.0) as $response => $chunk) {
             try {

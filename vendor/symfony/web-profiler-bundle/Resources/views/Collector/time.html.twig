@@ -1,42 +1,6 @@
 {% extends '@WebProfiler/Profiler/layout.html.twig' %}
 
-{% block head %}
-    {{ parent() }}
-
-    <style>
-        #timeline-control {
-            background: var(--table-background);
-            box-shadow: var(--shadow);
-            margin: 1em 0;
-            padding: 10px;
-        }
-        #timeline-control label {
-            font-weight: bold;
-            margin-right: 1em;
-        }
-        #timeline-control input {
-            background: var(--metric-value-background);
-            font-size: 16px;
-            padding: 4px;
-            text-align: right;
-            width: 5em;
-        }
-        #timeline-control .help {
-            margin-left: 1em;
-        }
-
-        .sf-profiler-timeline .legends {
-            font-size: 12px;
-            line-height: 1.5em;
-        }
-        .sf-profiler-timeline .legends button {
-            color: var(--color-text);
-        }
-        .sf-profiler-timeline + p.help {
-            margin-top: 0;
-        }
-    </style>
-{% endblock %}
+{% import _self as helper %}
 
 {% block toolbar %}
     {% set has_time_events = collector.events|length > 0 %}
@@ -106,9 +70,14 @@
                     <span class="label">Sub-Request{{ profile.children|length > 1 ? 's' }}</span>
                 </div>
 
-                {% set subrequests_time = has_time_events
-                    ? profile.children|reduce((total, child) => total + child.getcollector('time').events.__section__.duration, 0)
-                    : 'n/a' %}
+                {% if has_time_events %}
+                    {% set subrequests_time = 0 %}
+                    {% for child in profile.children %}
+                        {% set subrequests_time = subrequests_time + child.getcollector('time').events.__section__.duration %}
+                    {% endfor %}
+                {% else %}
+                    {% set subrequests_time = 'n/a' %}
+                {% endif %}
 
                 <div class="metric">
                     <span class="value">{{ subrequests_time }} <span class="unit">ms</span></span>
@@ -155,7 +124,7 @@
         </h3>
     {% endif %}
 
-    {{ _self.display_timeline(token, collector.events, collector.events.__section__.origin) }}
+    {{ helper.display_timeline(token, collector.events, collector.events.__section__.origin) }}
 
     {% if profile.children|length %}
         <p class="help">Note: sections with a striped background correspond to sub-requests.</p>
@@ -169,7 +138,7 @@
                 <small>{{ events.__section__.duration }} ms</small>
             </h4>
 
-            {{ _self.display_timeline(child.token, events, collector.events.__section__.origin) }}
+            {{ helper.display_timeline(child.token, events, collector.events.__section__.origin) }}
         {% endfor %}
     {% endif %}
 
@@ -180,7 +149,7 @@
     </pattern>
   </defs>
 </svg>
-<style>
+<style type="text/css">
 {{ include('@WebProfiler/Collector/time.css.twig') }}
 </style>
 <script>
@@ -190,11 +159,12 @@
 
 {% macro dump_request_data(token, events, origin) %}
 {% autoescape 'js' %}
+{% from _self import dump_events %}
 {
     id: "{{ token }}",
     left: {{ "%F"|format(events.__section__.origin - origin) }},
     end: "{{ '%F'|format(events.__section__.endtime) }}",
-    events: [ {{ _self.dump_events(events) }} ],
+    events: [ {{ dump_events(events) }} ],
 }
 {% endautoescape %}
 {% endmacro %}
@@ -229,6 +199,7 @@
 {% endmacro %}
 
 {% macro display_timeline(token, events, origin) %}
+{% import _self as helper %}
     <div class="sf-profiler-timeline">
         <div id="legend-{{ token }}" class="legends"></div>
         <svg id="timeline-{{ token }}" class="timeline-graph"></svg>
@@ -241,7 +212,7 @@
                     new SvgRenderer(document.getElementById('timeline-{{ token }}')),
                     new Legend(document.getElementById('legend-{{ token }}'), theme),
                     document.getElementById('threshold'),
-                    {{ _self.dump_request_data(token, events, origin) }}
+                    {{ helper.dump_request_data(token, events, origin) }}
                 );
             });
         {% endautoescape %}</script>

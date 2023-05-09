@@ -42,11 +42,21 @@ abstract class AbstractTransportFactory implements TransportFactoryInterface
 
     protected function getUser(Dsn $dsn): string
     {
-        return $dsn->getUser() ?? throw new IncompleteDsnException('User is not set.', $dsn->getScheme().'://'.$dsn->getHost());
+        $user = $dsn->getUser();
+        if (null === $user) {
+            throw new IncompleteDsnException('User is not set.', $dsn->getOriginalDsn());
+        }
+
+        return $user;
     }
 
     protected function getPassword(Dsn $dsn): string
     {
-        return $dsn->getPassword() ?? throw new IncompleteDsnException('Password is not set.', $dsn->getOriginalDsn());
+        $password = $dsn->getPassword();
+        if (null === $password) {
+            throw new IncompleteDsnException('Password is not set.', $dsn->getOriginalDsn());
+        }
+
+        return $password;
     }
 }

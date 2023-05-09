@@ -40,13 +40,6 @@ class ProblemNormalizer implements NormalizerInterface, CacheableSupportsMethodI
         $this->defaultContext = $defaultContext + $this->defaultContext;
     }
 
-    public function getSupportedTypes(?string $format): array
-    {
-        return [
-            FlattenException::class => __CLASS__ === self::class || $this->hasCacheableSupportsMethod(),
-        ];
-    }
-
     public function normalize(mixed $object, string $format = null, array $context = []): array
     {
         if (!$object instanceof FlattenException) {
@@ -78,13 +71,8 @@ class ProblemNormalizer implements NormalizerInterface, CacheableSupportsMethodI
         return $data instanceof FlattenException;
     }
 
-    /**
-     * @deprecated since Symfony 6.3, use "getSupportedTypes()" instead
-     */
     public function hasCacheableSupportsMethod(): bool
     {
-        trigger_deprecation('symfony/serializer', '6.3', 'The "%s()" method is deprecated, use "getSupportedTypes()" instead.', __METHOD__);
-
         return true;
     }
 }

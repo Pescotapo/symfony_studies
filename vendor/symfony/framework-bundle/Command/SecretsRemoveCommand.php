@@ -43,7 +43,7 @@ final class SecretsRemoveCommand extends Command
         parent::__construct();
     }
 
-    protected function configure(): void
+    protected function configure()
     {
         $this
             ->addArgument('name', InputArgument::REQUIRED, 'The name of the secret')

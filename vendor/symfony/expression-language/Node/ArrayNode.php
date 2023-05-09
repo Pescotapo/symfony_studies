@@ -27,7 +27,7 @@ class ArrayNode extends Node
         $this->index = -1;
     }
 
-    public function addElement(Node $value, Node $key = null): void
+    public function addElement(Node $value, Node $key = null)
     {
         $key ??= new ConstantNode(++$this->index);
 
@@ -37,14 +37,14 @@ class ArrayNode extends Node
     /**
      * Compiles the node to PHP.
      */
-    public function compile(Compiler $compiler): void
+    public function compile(Compiler $compiler)
     {
         $compiler->raw('[');
         $this->compileArguments($compiler);
         $compiler->raw(']');
     }
 
-    public function evaluate(array $functions, array $values): array
+    public function evaluate(array $functions, array $values)
     {
         $result = [];
         foreach ($this->getKeyValuePairs() as $pair) {
@@ -54,7 +54,7 @@ class ArrayNode extends Node
         return $result;
     }
 
-    public function toArray(): array
+    public function toArray()
     {
         $value = [];
         foreach ($this->getKeyValuePairs() as $pair) {
@@ -84,7 +84,7 @@ class ArrayNode extends Node
         return $array;
     }
 
-    protected function getKeyValuePairs(): array
+    protected function getKeyValuePairs()
     {
         $pairs = [];
         foreach (array_chunk($this->nodes, 2) as $pair) {
@@ -94,7 +94,7 @@ class ArrayNode extends Node
         return $pairs;
     }
 
-    protected function compileArguments(Compiler $compiler, bool $withKeys = true): void
+    protected function compileArguments(Compiler $compiler, bool $withKeys = true)
     {
         $first = true;
         foreach ($this->getKeyValuePairs() as $pair) {

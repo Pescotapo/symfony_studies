@@ -232,8 +232,6 @@ abstract class Constraint
 
     /**
      * Adds the given group if this constraint is in the Default group.
-     *
-     * @return void
      */
     public function addImplicitGroupName(string $group)
     {

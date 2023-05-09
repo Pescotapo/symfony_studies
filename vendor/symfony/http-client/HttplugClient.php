@@ -266,7 +266,7 @@ final class HttplugClient implements HttplugInterface, HttpAsyncClient, RequestF
         $this->wait();
     }
 
-    public function reset(): void
+    public function reset()
     {
         if ($this->client instanceof ResetInterface) {
             $this->client->reset();

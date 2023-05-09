@@ -17,9 +17,6 @@ use Symfony\Component\DependencyInjection\Reference;
 
 class AddDebugLogProcessorPass implements CompilerPassInterface
 {
-    /**
-     * @return void
-     */
     public function process(ContainerBuilder $container)
     {
         if (!$container->hasDefinition('profiler')) {
@@ -37,9 +34,6 @@ class AddDebugLogProcessorPass implements CompilerPassInterface
         $definition->addMethodCall('pushProcessor', [new Reference('debug.log_processor')]);
     }
 
-    /**
-     * @return void
-     */
     public static function configureLogger(mixed $logger)
     {
         if (\is_object($logger) && method_exists($logger, 'removeDebugLogger') && \in_array(\PHP_SAPI, ['cli', 'phpdbg'], true)) {

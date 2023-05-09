@@ -167,7 +167,7 @@ class ContainerAwareEventManager extends EventManager
         parent::removeEventSubscriber($subscriber);
     }
 
-    private function initializeListeners(string $eventName): void
+    private function initializeListeners(string $eventName)
     {
         $this->initialized[$eventName] = true;
         foreach ($this->listeners[$eventName] as $hash => $listener) {
@@ -179,7 +179,7 @@ class ContainerAwareEventManager extends EventManager
         }
     }
 
-    private function initializeSubscribers(): void
+    private function initializeSubscribers()
     {
         $this->initializedSubscribers = true;
         foreach ($this->subscribers as $subscriber) {

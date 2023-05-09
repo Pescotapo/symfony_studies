@@ -50,7 +50,7 @@ class RouterDebugCommand extends Command
         $this->fileLinkFormatter = $fileLinkFormatter;
     }
 
-    protected function configure(): void
+    protected function configure()
     {
         $this
             ->setDefinition([
@@ -80,7 +80,9 @@ EOF
         $routes = $this->router->getRouteCollection();
         $container = null;
         if ($this->fileLinkFormatter) {
-            $container = fn () => $this->getContainerBuilder($this->getApplication()->getKernel());
+            $container = function () {
+                return $this->getContainerBuilder($this->getApplication()->getKernel());
+            };
         }
 
         if ($name) {

@@ -52,24 +52,15 @@ return static function (ContainerConfigurator $container) {
             ->tag('notifier.channel', ['channel' => 'browser'])
 
         ->set('notifier.channel.chat', ChatChannel::class)
-            ->args([
-                service('chatter.transports'),
-                abstract_arg('message bus'),
-            ])
+            ->args([service('chatter.transports'), service('messenger.default_bus')->ignoreOnInvalid()])
             ->tag('notifier.channel', ['channel' => 'chat'])
 
         ->set('notifier.channel.sms', SmsChannel::class)
-            ->args([
-                service('texter.transports'),
-                abstract_arg('message bus'),
-            ])
+            ->args([service('texter.transports'), service('messenger.default_bus')->ignoreOnInvalid()])
             ->tag('notifier.channel', ['channel' => 'sms'])
 
         ->set('notifier.channel.email', EmailChannel::class)
-            ->args([
-                service('mailer.transports'),
-                abstract_arg('message bus'),
-            ])
+            ->args([service('mailer.transports'), service('messenger.default_bus')->ignoreOnInvalid()])
             ->tag('notifier.channel', ['channel' => 'email'])
 
         ->set('notifier.channel.push', PushChannel::class)
@@ -85,7 +76,7 @@ return static function (ContainerConfigurator $container) {
         ->set('chatter', Chatter::class)
             ->args([
                 service('chatter.transports'),
-                abstract_arg('message bus'),
+                service('messenger.default_bus')->ignoreOnInvalid(),
                 service('event_dispatcher')->ignoreOnInvalid(),
             ])
 
@@ -105,7 +96,7 @@ return static function (ContainerConfigurator $container) {
         ->set('texter', Texter::class)
             ->args([
                 service('texter.transports'),
-                abstract_arg('message bus'),
+                service('messenger.default_bus')->ignoreOnInvalid(),
                 service('event_dispatcher')->ignoreOnInvalid(),
             ])
 
@@ -126,11 +117,7 @@ return static function (ContainerConfigurator $container) {
             ->args([service('texter.transports')])
             ->tag('messenger.message_handler', ['handles' => PushMessage::class])
 
-        ->set('notifier.notification_logger_listener', NotificationLoggerListener::class)
+        ->set('notifier.logger_notification_listener', NotificationLoggerListener::class)
             ->tag('kernel.event_subscriber')
-
-        ->alias('notifier.logger_notification_listener', 'notifier.notification_logger_listener')
-            ->deprecate('symfony/framework-bundle', '6.3', 'The "%alias_id%" service is deprecated, use "notifier.notification_logger_listener" instead.')
-
     ;
 };

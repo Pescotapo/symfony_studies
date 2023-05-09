@@ -1,11 +1,6 @@
 CHANGELOG
 =========
 
-6.3
----
-
- * Add `UriTemplateHttpClient` to use URI templates as specified in the RFC 6570
-
 6.2
 ---
 

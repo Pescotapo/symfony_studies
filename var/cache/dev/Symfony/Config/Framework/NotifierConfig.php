@@ -13,7 +13,6 @@ use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 class NotifierConfig 
 {
     private $enabled;
-    private $messageBus;
     private $chatterTransports;
     private $texterTransports;
     private $notificationOnFailedMessages;
@@ -22,7 +21,7 @@ class NotifierConfig
     private $_usedProperties = [];
 
     /**
-     * @default true
+     * @default false
      * @param ParamConfigurator|bool $value
      * @return $this
      */
@@ -30,20 +29,6 @@ class NotifierConfig
     {
         $this->_usedProperties['enabled'] = true;
         $this->enabled = $value;
-
-        return $this;
-    }
-
-    /**
-     * The message bus to use. Defaults to the default bus if the Messenger component is installed.
-     * @default null
-     * @param ParamConfigurator|mixed $value
-     * @return $this
-     */
-    public function messageBus($value): static
-    {
-        $this->_usedProperties['messageBus'] = true;
-        $this->messageBus = $value;
 
         return $this;
     }
@@ -109,12 +94,6 @@ class NotifierConfig
             unset($value['enabled']);
         }
 
-        if (array_key_exists('message_bus', $value)) {
-            $this->_usedProperties['messageBus'] = true;
-            $this->messageBus = $value['message_bus'];
-            unset($value['message_bus']);
-        }
-
         if (array_key_exists('chatter_transports', $value)) {
             $this->_usedProperties['chatterTransports'] = true;
             $this->chatterTransports = $value['chatter_transports'];
@@ -155,9 +134,6 @@ class NotifierConfig
         $output = [];
         if (isset($this->_usedProperties['enabled'])) {
             $output['enabled'] = $this->enabled;
-        }
-        if (isset($this->_usedProperties['messageBus'])) {
-            $output['message_bus'] = $this->messageBus;
         }
         if (isset($this->_usedProperties['chatterTransports'])) {
             $output['chatter_transports'] = $this->chatterTransports;

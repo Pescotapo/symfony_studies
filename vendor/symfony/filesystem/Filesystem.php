@@ -33,8 +33,6 @@ class Filesystem
      *
      * @throws FileNotFoundException When originFile doesn't exist
      * @throws IOException           When copy fails
-     *
-     * @return void
      */
     public function copy(string $originFile, string $targetFile, bool $overwriteNewerFiles = false)
     {
@@ -85,8 +83,6 @@ class Filesystem
      * Creates a directory recursively.
      *
      * @throws IOException On any directory creation failure
-     *
-     * @return void
      */
     public function mkdir(string|iterable $dirs, int $mode = 0777)
     {
@@ -128,8 +124,6 @@ class Filesystem
      * @param int|null $atime The access time as a Unix timestamp, if not supplied the current system time is used
      *
      * @throws IOException When touch fails
-     *
-     * @return void
      */
     public function touch(string|iterable $files, int $time = null, int $atime = null)
     {
@@ -144,8 +138,6 @@ class Filesystem
      * Removes files or directories.
      *
      * @throws IOException When removal fails
-     *
-     * @return void
      */
     public function remove(string|iterable $files)
     {
@@ -169,7 +161,7 @@ class Filesystem
                 }
             } elseif (is_dir($file)) {
                 if (!$isRecursive) {
-                    $tmpName = \dirname(realpath($file)).'/.'.strrev(strtr(base64_encode(random_bytes(2)), '/=', '-.'));
+                    $tmpName = \dirname(realpath($file)).'/.'.strrev(strtr(base64_encode(random_bytes(2)), '/=', '-_'));
 
                     if (file_exists($tmpName)) {
                         try {
@@ -212,13 +204,11 @@ class Filesystem
      * @param bool $recursive Whether change the mod recursively or not
      *
      * @throws IOException When the change fails
-     *
-     * @return void
      */
     public function chmod(string|iterable $files, int $mode, int $umask = 0000, bool $recursive = false)
     {
         foreach ($this->toIterable($files) as $file) {
-            if (!self::box('chmod', $file, $mode & ~$umask)) {
+            if (\is_int($mode) && !self::box('chmod', $file, $mode & ~$umask)) {
                 throw new IOException(sprintf('Failed to chmod file "%s": ', $file).self::$lastError, 0, null, $file);
             }
             if ($recursive && is_dir($file) && !is_link($file)) {
@@ -234,8 +224,6 @@ class Filesystem
      * @param bool       $recursive Whether change the owner recursively or not
      *
      * @throws IOException When the change fails
-     *
-     * @return void
      */
     public function chown(string|iterable $files, string|int $user, bool $recursive = false)
     {
@@ -262,8 +250,6 @@ class Filesystem
      * @param bool       $recursive Whether change the group recursively or not
      *
      * @throws IOException When the change fails
-     *
-     * @return void
      */
     public function chgrp(string|iterable $files, string|int $group, bool $recursive = false)
     {
@@ -288,8 +274,6 @@ class Filesystem
      *
      * @throws IOException When target file or directory already exists
      * @throws IOException When origin cannot be renamed
-     *
-     * @return void
      */
     public function rename(string $origin, string $target, bool $overwrite = false)
     {
@@ -330,8 +314,6 @@ class Filesystem
      * Creates a symbolic link or copy a directory.
      *
      * @throws IOException When symlink fails
-     *
-     * @return void
      */
     public function symlink(string $originDir, string $targetDir, bool $copyOnWindows = false)
     {
@@ -369,8 +351,6 @@ class Filesystem
      *
      * @throws FileNotFoundException When original file is missing or not a file
      * @throws IOException           When link fails, including if link already exists
-     *
-     * @return void
      */
     public function hardlink(string $originFile, string|iterable $targetFiles)
     {
@@ -458,9 +438,11 @@ class Filesystem
             $startPath = str_replace('\\', '/', $startPath);
         }
 
-        $splitDriveLetter = fn ($path) => (\strlen($path) > 2 && ':' === $path[1] && '/' === $path[2] && ctype_alpha($path[0]))
-            ? [substr($path, 2), strtoupper($path[0])]
-            : [$path, null];
+        $splitDriveLetter = function ($path) {
+            return (\strlen($path) > 2 && ':' === $path[1] && '/' === $path[2] && ctype_alpha($path[0]))
+                ? [substr($path, 2), strtoupper($path[0])]
+                : [$path, null];
+        };
 
         $splitPath = function ($path) {
             $result = [];
@@ -527,8 +509,6 @@ class Filesystem
      *                                    - $options['delete'] Whether to delete files that are not in the source directory (defaults to false)
      *
      * @throws IOException When file type is unknown
-     *
-     * @return void
      */
     public function mirror(string $originDir, string $targetDir, \Traversable $iterator = null, array $options = [])
     {
@@ -653,8 +633,6 @@ class Filesystem
      * @param string|resource $content The data to write into the file
      *
      * @throws IOException if the file cannot be written to
-     *
-     * @return void
      */
     public function dumpFile(string $filename, $content)
     {
@@ -694,8 +672,6 @@ class Filesystem
      * @param bool            $lock    Whether the file should be locked when writing to it
      *
      * @throws IOException If the file is not writable
-     *
-     * @return void
      */
     public function appendToFile(string $filename, $content/* , bool $lock = false */)
     {
@@ -754,7 +730,7 @@ class Filesystem
     /**
      * @internal
      */
-    public static function handleError(int $type, string $msg): void
+    public static function handleError(int $type, string $msg)
     {
         self::$lastError = $msg;
     }

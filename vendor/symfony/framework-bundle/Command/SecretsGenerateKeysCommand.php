@@ -41,7 +41,7 @@ final class SecretsGenerateKeysCommand extends Command
         parent::__construct();
     }
 
-    protected function configure(): void
+    protected function configure()
     {
         $this
             ->addOption('local', 'l', InputOption::VALUE_NONE, 'Update the local vault.')

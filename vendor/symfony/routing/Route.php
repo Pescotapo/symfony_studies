@@ -428,7 +428,7 @@ class Route implements \Serializable
         }, $pattern);
     }
 
-    private function sanitizeRequirement(string $key, string $regex): string
+    private function sanitizeRequirement(string $key, string $regex)
     {
         if ('' !== $regex) {
             if ('^' === $regex[0]) {

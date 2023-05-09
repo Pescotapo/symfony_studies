@@ -38,7 +38,7 @@ class ContainerDebugCommand extends Command
 {
     use BuildDebugContainerTrait;
 
-    protected function configure(): void
+    protected function configure()
     {
         $this
             ->setDefinition([
@@ -243,7 +243,7 @@ EOF
      *
      * @throws \InvalidArgumentException
      */
-    protected function validateInput(InputInterface $input): void
+    protected function validateInput(InputInterface $input)
     {
         $options = ['tags', 'tag', 'parameters', 'parameter'];
 

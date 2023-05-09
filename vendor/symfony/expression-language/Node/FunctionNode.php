@@ -28,7 +28,7 @@ class FunctionNode extends Node
         );
     }
 
-    public function compile(Compiler $compiler): void
+    public function compile(Compiler $compiler)
     {
         $arguments = [];
         foreach ($this->nodes['arguments']->nodes as $node) {
@@ -50,9 +50,6 @@ class FunctionNode extends Node
         return $functions[$this->attributes['name']]['evaluator'](...$arguments);
     }
 
-    /**
-     * @return array
-     */
     public function toArray()
     {
         $array = [];

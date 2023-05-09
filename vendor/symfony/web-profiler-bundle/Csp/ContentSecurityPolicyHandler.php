@@ -71,7 +71,7 @@ class ContentSecurityPolicyHandler
      *
      * All related headers will be removed.
      */
-    public function disableCsp(): void
+    public function disableCsp()
     {
         $this->cspDisabled = true;
     }
@@ -96,13 +96,13 @@ class ContentSecurityPolicyHandler
         return $nonces;
     }
 
-    private function cleanHeaders(Response $response): void
+    private function cleanHeaders(Response $response)
     {
         $response->headers->remove('X-SymfonyProfiler-Script-Nonce');
         $response->headers->remove('X-SymfonyProfiler-Style-Nonce');
     }
 
-    private function removeCspHeaders(Response $response): void
+    private function removeCspHeaders(Response $response)
     {
         $response->headers->remove('X-Content-Security-Policy');
         $response->headers->remove('Content-Security-Policy');
@@ -180,7 +180,9 @@ class ContentSecurityPolicyHandler
      */
     private function generateCspHeader(array $directives): string
     {
-        return array_reduce(array_keys($directives), fn ($res, $name) => ('' !== $res ? $res.'; ' : '').sprintf('%s %s', $name, implode(' ', $directives[$name])), '');
+        return array_reduce(array_keys($directives), function ($res, $name) use ($directives) {
+            return ('' !== $res ? $res.'; ' : '').sprintf('%s %s', $name, implode(' ', $directives[$name]));
+        }, '');
     }
 
     /**

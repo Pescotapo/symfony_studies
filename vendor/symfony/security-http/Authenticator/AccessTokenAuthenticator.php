@@ -95,9 +95,6 @@ class AccessTokenAuthenticator implements AuthenticatorInterface
         );
     }
 
-    /**
-     * @return void
-     */
     public function setTranslator(?TranslatorInterface $translator)
     {
         $this->translator = $translator;
