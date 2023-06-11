@@ -66,6 +66,9 @@ class DoctrineTokenProvider implements TokenProviderInterface, TokenVerifierInte
         throw new TokenNotFoundException('No token found.');
     }
 
+    /**
+     * @return void
+     */
     public function deleteTokenBySeries(string $series)
     {
         $sql = 'DELETE FROM rememberme_token WHERE series=:series';
@@ -78,17 +81,20 @@ class DoctrineTokenProvider implements TokenProviderInterface, TokenVerifierInte
         }
     }
 
+    /**
+     * @return void
+     */
     public function updateToken(string $series, #[\SensitiveParameter] string $tokenValue, \DateTime $lastUsed)
     {
         $sql = 'UPDATE rememberme_token SET value=:value, lastUsed=:lastUsed WHERE series=:series';
         $paramValues = [
             'value' => $tokenValue,
-            'lastUsed' => $lastUsed,
+            'lastUsed' => \DateTimeImmutable::createFromInterface($lastUsed),
             'series' => $series,
         ];
         $paramTypes = [
             'value' => ParameterType::STRING,
-            'lastUsed' => Types::DATETIME_MUTABLE,
+            'lastUsed' => Types::DATETIME_IMMUTABLE,
             'series' => ParameterType::STRING,
         ];
         if (method_exists($this->conn, 'executeStatement')) {
@@ -101,6 +107,9 @@ class DoctrineTokenProvider implements TokenProviderInterface, TokenVerifierInte
         }
     }
 
+    /**
+     * @return void
+     */
     public function createNewToken(PersistentTokenInterface $token)
     {
         $sql = 'INSERT INTO rememberme_token (class, username, series, value, lastUsed) VALUES (:class, :username, :series, :value, :lastUsed)';
@@ -109,14 +118,14 @@ class DoctrineTokenProvider implements TokenProviderInterface, TokenVerifierInte
             'username' => $token->getUserIdentifier(),
             'series' => $token->getSeries(),
             'value' => $token->getTokenValue(),
-            'lastUsed' => $token->getLastUsed(),
+            'lastUsed' => \DateTimeImmutable::createFromInterface($token->getLastUsed()),
         ];
         $paramTypes = [
             'class' => ParameterType::STRING,
             'username' => ParameterType::STRING,
             'series' => ParameterType::STRING,
             'value' => ParameterType::STRING,
-            'lastUsed' => Types::DATETIME_MUTABLE,
+            'lastUsed' => Types::DATETIME_IMMUTABLE,
         ];
         if (method_exists($this->conn, 'executeStatement')) {
             $this->conn->executeStatement($sql, $paramValues, $paramTypes);
@@ -177,6 +186,7 @@ class DoctrineTokenProvider implements TokenProviderInterface, TokenVerifierInte
         $this->conn->beginTransaction();
         try {
             $this->deleteTokenBySeries($tmpSeries);
+            $lastUsed = \DateTime::createFromInterface($lastUsed);
             $this->createNewToken(new PersistentToken($token->getClass(), $token->getUserIdentifier(), $tmpSeries, $token->getTokenValue(), $lastUsed));
 
             $this->conn->commit();
@@ -188,15 +198,18 @@ class DoctrineTokenProvider implements TokenProviderInterface, TokenVerifierInte
 
     /**
      * Adds the Table to the Schema if "remember me" uses this Connection.
+     *
+     * @param \Closure $isSameDatabase
      */
-    public function configureSchema(Schema $schema, Connection $forConnection): void
+    public function configureSchema(Schema $schema, Connection $forConnection/* , \Closure $isSameDatabase */): void
     {
-        // only update the schema for this connection
-        if ($forConnection !== $this->conn) {
+        if ($schema->hasTable('rememberme_token')) {
             return;
         }
 
-        if ($schema->hasTable('rememberme_token')) {
+        $isSameDatabase = 2 < \func_num_args() ? func_get_arg(2) : static fn () => false;
+
+        if ($forConnection !== $this->conn && !$isSameDatabase($this->conn->executeStatement(...))) {
             return;
         }
 
@@ -208,7 +221,7 @@ class DoctrineTokenProvider implements TokenProviderInterface, TokenVerifierInte
         $table = $schema->createTable('rememberme_token');
         $table->addColumn('series', Types::STRING, ['length' => 88]);
         $table->addColumn('value', Types::STRING, ['length' => 88]);
-        $table->addColumn('lastUsed', Types::DATETIME_MUTABLE);
+        $table->addColumn('lastUsed', Types::DATETIME_IMMUTABLE);
         $table->addColumn('class', Types::STRING, ['length' => 100]);
         $table->addColumn('username', Types::STRING, ['length' => 200]);
         $table->setPrimaryKey(['series']);

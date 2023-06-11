@@ -1,6 +1,12 @@
 CHANGELOG
 =========
 
+6.3
+---
+
+ * Add the special `strip` locale to `EmojiTransliterator` to strip all emojis from a string
+ * Add `compress` script to compress the `Resources/data` directory when disk space matters
+
 6.2
 ---
 

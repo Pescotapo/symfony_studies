@@ -72,7 +72,7 @@ abstract class AbstractFailedMessagesCommand extends Command
         return $stamp?->getId();
     }
 
-    protected function displaySingleMessage(Envelope $envelope, SymfonyStyle $io)
+    protected function displaySingleMessage(Envelope $envelope, SymfonyStyle $io): void
     {
         $io->title('Failed Message Details');
 
@@ -86,7 +86,7 @@ abstract class AbstractFailedMessagesCommand extends Command
         $lastMessageDecodingFailedStamp = $envelope->last(MessageDecodingFailedStamp::class);
 
         $rows = [
-            ['Class', \get_class($envelope->getMessage())],
+            ['Class', $envelope->getMessage()::class],
         ];
 
         if (null !== $id = $this->getMessageId($envelope)) {
@@ -148,7 +148,7 @@ abstract class AbstractFailedMessagesCommand extends Command
         }
     }
 
-    protected function printPendingMessagesMessage(ReceiverInterface $receiver, SymfonyStyle $io)
+    protected function printPendingMessagesMessage(ReceiverInterface $receiver, SymfonyStyle $io): void
     {
         if ($receiver instanceof MessageCountAwareInterface) {
             if (1 === $receiver->getMessageCount()) {
@@ -208,7 +208,7 @@ abstract class AbstractFailedMessagesCommand extends Command
         }
     }
 
-    protected function interactiveChooseFailureTransport(SymfonyStyle $io)
+    protected function interactiveChooseFailureTransport(SymfonyStyle $io): string
     {
         $failedTransports = array_keys($this->failureTransports->getProvidedServices());
         $question = new ChoiceQuestion('Select failed transport:', $failedTransports, 0);
