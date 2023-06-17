@@ -85,7 +85,10 @@ class DateTimeToStringTransformer extends BaseDateTimeTransformer
             throw new TransformationFailedException('Expected a \DateTimeInterface.');
         }
 
-        $dateTime = \DateTimeImmutable::createFromInterface($dateTime);
+        if (!$dateTime instanceof \DateTimeImmutable) {
+            $dateTime = clone $dateTime;
+        }
+
         $dateTime = $dateTime->setTimezone(new \DateTimeZone($this->outputTimezone));
 
         return $dateTime->format($this->generateFormat);

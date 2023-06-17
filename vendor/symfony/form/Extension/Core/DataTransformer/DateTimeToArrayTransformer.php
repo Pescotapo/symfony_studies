@@ -67,7 +67,10 @@ class DateTimeToArrayTransformer extends BaseDateTimeTransformer
         }
 
         if ($this->inputTimezone !== $this->outputTimezone) {
-            $dateTime = \DateTimeImmutable::createFromInterface($dateTime);
+            if (!$dateTime instanceof \DateTimeImmutable) {
+                $dateTime = clone $dateTime;
+            }
+
             $dateTime = $dateTime->setTimezone(new \DateTimeZone($this->outputTimezone));
         }
 

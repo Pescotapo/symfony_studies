@@ -687,7 +687,7 @@ class Response
      *
      * @final
      */
-    public function getDate(): ?\DateTimeImmutable
+    public function getDate(): ?\DateTimeInterface
     {
         return $this->headers->getDate('Date');
     }
@@ -701,7 +701,10 @@ class Response
      */
     public function setDate(\DateTimeInterface $date): static
     {
-        $date = \DateTimeImmutable::createFromInterface($date);
+        if ($date instanceof \DateTime) {
+            $date = \DateTimeImmutable::createFromMutable($date);
+        }
+
         $date = $date->setTimezone(new \DateTimeZone('UTC'));
         $this->headers->set('Date', $date->format('D, d M Y H:i:s').' GMT');
 
@@ -742,13 +745,13 @@ class Response
      *
      * @final
      */
-    public function getExpires(): ?\DateTimeImmutable
+    public function getExpires(): ?\DateTimeInterface
     {
         try {
             return $this->headers->getDate('Expires');
         } catch (\RuntimeException) {
             // according to RFC 2616 invalid date formats (e.g. "0" and "-1") must be treated as in the past
-            return \DateTimeImmutable::createFromFormat('U', time() - 172800);
+            return \DateTime::createFromFormat('U', time() - 172800);
         }
     }
 
@@ -772,7 +775,10 @@ class Response
             return $this;
         }
 
-        $date = \DateTimeImmutable::createFromInterface($date);
+        if ($date instanceof \DateTime) {
+            $date = \DateTimeImmutable::createFromMutable($date);
+        }
+
         $date = $date->setTimezone(new \DateTimeZone('UTC'));
         $this->headers->set('Expires', $date->format('D, d M Y H:i:s').' GMT');
 
@@ -928,7 +934,7 @@ class Response
      *
      * @final
      */
-    public function getLastModified(): ?\DateTimeImmutable
+    public function getLastModified(): ?\DateTimeInterface
     {
         return $this->headers->getDate('Last-Modified');
     }
@@ -953,7 +959,10 @@ class Response
             return $this;
         }
 
-        $date = \DateTimeImmutable::createFromInterface($date);
+        if ($date instanceof \DateTime) {
+            $date = \DateTimeImmutable::createFromMutable($date);
+        }
+
         $date = $date->setTimezone(new \DateTimeZone('UTC'));
         $this->headers->set('Last-Modified', $date->format('D, d M Y H:i:s').' GMT');
 

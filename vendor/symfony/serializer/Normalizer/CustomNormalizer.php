@@ -28,7 +28,6 @@ class CustomNormalizer implements NormalizerInterface, DenormalizerInterface, Se
     {
         return [
             NormalizableInterface::class => __CLASS__ === static::class || $this->hasCacheableSupportsMethod(),
-            DenormalizableInterface::class => __CLASS__ === static::class || $this->hasCacheableSupportsMethod(),
         ];
     }
 

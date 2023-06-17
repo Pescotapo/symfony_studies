@@ -63,6 +63,9 @@ class ContainerAwareEventManager extends EventManager
         }
     }
 
+    /**
+     * @return object[][]
+     */
     public function getListeners($event = null): array
     {
         if (null === $event) {

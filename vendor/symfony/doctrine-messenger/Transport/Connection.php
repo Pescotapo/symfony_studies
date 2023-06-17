@@ -145,9 +145,9 @@ class Connection implements ResetInterface
             $now,
             $availableAt,
         ], [
-            Types::STRING,
-            Types::STRING,
-            Types::STRING,
+            null,
+            null,
+            null,
             Types::DATETIME_IMMUTABLE,
             Types::DATETIME_IMMUTABLE,
         ]);
@@ -274,7 +274,7 @@ class Connection implements ResetInterface
     {
         $configuration = $this->driverConnection->getConfiguration();
         $assetFilter = $configuration->getSchemaAssetsFilter();
-        $configuration->setSchemaAssetsFilter(static function () { return true; });
+        $configuration->setSchemaAssetsFilter(null);
         $this->updateSchema();
         $configuration->setSchemaAssetsFilter($assetFilter);
         $this->autoSetup = false;
@@ -478,11 +478,9 @@ class Connection implements ResetInterface
 
         $schemaManager = $this->createSchemaManager();
         $comparator = $this->createComparator($schemaManager);
-        $schemaDiff = $this->compareSchemas($comparator, method_exists($schemaManager, 'introspectSchema') ? $schemaManager->introspectSchema() : $schemaManager->createSchema(), $this->getSchema());
-        $platform = $this->driverConnection->getDatabasePlatform();
-        $queries = method_exists($platform, 'getAlterSchemaSQL') ? $platform->getAlterSchemaSQL($schemaDiff) : $schemaDiff->toSaveSql($platform);
+        $schemaDiff = $this->compareSchemas($comparator, $schemaManager->createSchema(), $this->getSchema());
 
-        foreach ($queries as $sql) {
+        foreach ($schemaDiff->toSaveSql($this->driverConnection->getDatabasePlatform()) as $sql) {
             if (method_exists($this->driverConnection, 'executeStatement')) {
                 $this->driverConnection->executeStatement($sql);
             } else {
@@ -507,7 +505,7 @@ class Connection implements ResetInterface
 
     private function compareSchemas(Comparator $comparator, Schema $from, Schema $to): SchemaDiff
     {
-        return method_exists($comparator, 'compareSchemas') || method_exists($comparator, 'doCompareSchemas')
+        return method_exists($comparator, 'compareSchemas')
             ? $comparator->compareSchemas($from, $to)
             : $comparator->compare($from, $to);
     }

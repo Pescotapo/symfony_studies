@@ -1,11 +1,6 @@
 CHANGELOG
 =========
 
-6.4
----
-
- * Add optional `$className` parameter to `ControllerEvent::getAttributes()`
-
 6.3
 ---
 

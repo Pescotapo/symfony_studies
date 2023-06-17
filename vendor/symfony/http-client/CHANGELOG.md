@@ -1,11 +1,6 @@
 CHANGELOG
 =========
 
-6.4
----
-
- * Add `max_retries` option to `RetryableHttpClient` to adjust the retry logic on a per request level
-
 6.3
 ---
 

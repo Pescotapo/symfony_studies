@@ -311,10 +311,6 @@ final class CheckTypeDeclarationsPass extends AbstractRecursivePass
             if (false === $value) {
                 return;
             }
-        } elseif ('true' === $type) {
-            if (true === $value) {
-                return;
-            }
         } elseif ($reflectionType->isBuiltin()) {
             $checkFunction = sprintf('is_%s', $type);
             if ($checkFunction($value)) {

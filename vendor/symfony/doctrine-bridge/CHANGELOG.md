@@ -1,13 +1,6 @@
 CHANGELOG
 =========
 
-6.4
----
-
- * Deprecate `DbalLogger`, use a middleware instead
- * Deprecate not constructing `DoctrineDataCollector` with an instance of `DebugDataHolder`
- * Deprecate `DoctrineDataCollector::addLogger()`, use a `DebugDataHolder` instead
-
 6.3
 ---
 

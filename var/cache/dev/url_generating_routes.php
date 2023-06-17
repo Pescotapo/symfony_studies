@@ -16,6 +16,6 @@ return [
     '_profiler_router' => [['token'], ['_controller' => 'web_profiler.controller.router::panelAction'], [], [['text', '/router'], ['variable', '/', '[^/]++', 'token', true], ['text', '/_profiler']], [], [], []],
     '_profiler_exception' => [['token'], ['_controller' => 'web_profiler.controller.exception_panel::body'], [], [['text', '/exception'], ['variable', '/', '[^/]++', 'token', true], ['text', '/_profiler']], [], [], []],
     '_profiler_exception_css' => [['token'], ['_controller' => 'web_profiler.controller.exception_panel::stylesheet'], [], [['text', '/exception.css'], ['variable', '/', '[^/]++', 'token', true], ['text', '/_profiler']], [], [], []],
-    'app_zool_index' => [['animal'], ['_controller' => 'App\\Controller\\Zool::index'], [], [['variable', '/', '[^/]++', 'animal', true], ['text', '/zool']], [], [], []],
-    'app_hello' => [[], ['_controller' => 'App\\Controller\\RandomNumber::index'], [], [['text', '/random']], [], [], []],
+    'app_home' => [[], ['_controller' => 'App\\Controller\\HomeController::index'], [], [['text', '/']], [], [], []],
+    'app_list_pokemon' => [[], ['_controller' => 'App\\Controller\\ListPokemonController::index'], [], [['text', '/list/pokemon']], [], [], []],
 ];
