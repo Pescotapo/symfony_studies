@@ -5,48 +5,15 @@
 {% endblock %}
 
 {% block body %}
-<ol style="--length: 5" role="list">
-  <li style="--i: 1">
-    <h3>Discovery and assessment</h3>
-    <p>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-      tempor incididunt ut labore et dolore magna aliqua. Adipiscing diam donec
-      adipiscing tristique risus.
-    </p>
-  </li>
-  <li style="--i: 2">
-    <h3>Information gathering and analysis</h3>
-    <p>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-      tempor incididunt ut labore et dolore magna aliqua. Adipiscing diam donec
-      adipiscing tristique risus.
-    </p>
-  </li>
-  <li style="--i: 3">
-    <h3>Creating your claim</h3>
-    <p>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-      tempor incididunt ut labore et dolore magna aliqua. Adipiscing diam donec
-      adipiscing tristique risus.
-    </p>
-  </li>
-  <li style="--i: 4">
-    <h3>Approvals and submission</h3>
-    <p>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-      tempor incididunt ut labore et dolore magna aliqua. Adipiscing diam donec
-      adipiscing tristique risus.
-    </p>
-  </li>
-  <li style="--i: 5">
-    <h3>Receiving your benefit</h3>
-    <p>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-      tempor incididunt ut labore et dolore magna aliqua. Adipiscing diam donec
-      adipiscing tristique risus.
-    </p>
-  </li>
-</ol>
 
-{{print_r(date)}}
-{% endblock %}
+    <ol style="--length: {{count(date)}}" role="list">
+        {% for key, pokemon in date %}
+            <li style="--i: {{key+1}}">
+                {% for key, infoPokemon in pokemon %}
+                    <h3>{{infoPokemon["name"]}}</h3>
+                    <p>{{infoPokemon["description"]}}</p>
+                {% endfor %}
+            </li>
+        {% endfor %}
+    </ol>
+{% endblock %}  

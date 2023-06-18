@@ -355,7 +355,6 @@
       <argument>https://pokeapi.glitch.me</argument>
     </service>
     <service id="App\TwigExtension\CustomTwigExtesion" class="App\TwigExtension\CustomTwigExtesion" autowire="true" autoconfigure="true">
-      <tag name="wig.extension"/>
       <tag name="twig.extension"/>
     </service>
     <service id="argument_metadata_factory" class="Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadataFactory"/>

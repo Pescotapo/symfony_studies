@@ -3,41 +3,36 @@
 namespace App\Controller;
 
 use App\Service\ServiceApi;
-use App\TwigExtension\CustomTwigExtesion;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ListPokemonController extends AbstractController
 {
+    private ServiceApi $serviceApi;
+
     #[Route('/list/pokemon', name: 'app_list_pokemon')]
     public function index(ServiceApi $serviceApi): Response
     {
-        $json = $serviceApi->getData("v1/pokemon/3");
-        $get = json_decode($json, true);
-        //dd($get);
+        $this->serviceApi = $serviceApi;
 
-        $date = [];
-        $count = [];
+        $date = $this->quantityOfRequests(20);
 
-        foreach ($get as $key => $value) {
-            foreach ($value as $key => $i) {
-                $count[$key] = isset($count[$key]) ? $count[$key] + 1 : 1;
-                $date[$key . $count[$key]] = $i;
-            }
-        };
-
-        $twig = new CustomTwigExtesion;
-        $twig->setFunction();
+        //dd($date);
 
         return $this->render('list_pokemon/index.html.twig', [
-            'date' => $date,
+            'date' => $date
         ]);
     }
 
-    public function print_r(array $arg): string
+    private function quantityOfRequests(int $quantity): array
     {
-        return print_r($arg, true);
+        for($i = 1; $i <= $quantity; $i++){
+            $date[] = json_decode($this->serviceApi->getData("v1/pokemon/$i"), true);
+        }
+
+        return $date;
     }
+
 }
 

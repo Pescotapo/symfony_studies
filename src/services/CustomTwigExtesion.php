@@ -11,16 +11,19 @@ use Twig\TwigFunction;
 */
 class CustomTwigExtesion extends AbstractExtension
 {
-    public function setFunction()
+    public function getFunctions()
     {
         return [
-            new TwigFunction("print_r", [$this, "printr"])
+            new TwigFunction("print_r", function(array|object $object){
+                return "<pre>";print_r($object);echo "</pre>";
+            }),
+            new TwigFunction("count", function(mixed $mixed){
+                return count($mixed);
+            }),
+            new TwigFunction("hasPosition", function(int|string $key, array $array){
+                return array_key_exists($key, $array);
+            })
         ];
-    }
-
-    public function printr($object)
-    {
-        return print_r($object, true);
     }
 }
 
