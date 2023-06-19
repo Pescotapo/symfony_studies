@@ -1220,3 +1220,6 @@
 [2023-06-19T00:46:23.092529+00:00] security.DEBUG: Checking for authenticator support. {"firewall_name":"main","authenticators":0} []
 [2023-06-19T00:46:49.065916+00:00] request.INFO: Matched route "app_list_pokemon". {"route":"app_list_pokemon","route_parameters":{"_route":"app_list_pokemon","_controller":"App\\Controller\\ListPokemonController::index"},"request_uri":"http://bbc8-177-206-206-138.ngrok-free.app/list/pokemon","method":"GET"} []
 [2023-06-19T00:46:49.089934+00:00] security.DEBUG: Checking for authenticator support. {"firewall_name":"main","authenticators":0} []
+[2023-06-19T11:54:17.190925+00:00] request.INFO: Matched route "app_home". {"route":"app_home","route_parameters":{"_route":"app_home","_controller":"App\\Controller\\HomeController::index"},"request_uri":"http://localhost:1234/","method":"GET"} []
+[2023-06-19T11:54:17.226099+00:00] security.DEBUG: Checking for authenticator support. {"firewall_name":"main","authenticators":0} []
+[2023-06-19T11:54:18.062730+00:00] request.INFO: Matched route "_wdt". {"route":"_wdt","route_parameters":{"_route":"_wdt","_controller":"web_profiler.controller.profiler::toolbarAction","token":"57fa44"},"request_uri":"http://localhost:1234/_wdt/57fa44","method":"GET"} []
