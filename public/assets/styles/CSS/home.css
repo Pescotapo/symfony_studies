@@ -1,6 +1,5 @@
 .home {
-    height: 50vh;
-    margin-top: 50%;
+    height: 100vh;
     border-radius: 50%;
     background-color: gray;
 }
@@ -19,17 +18,20 @@
 
 #bt {
     background-color: green;
-    transition-duration: 1.0s;
+    transition-duration: .4s;
     font-size: 50%;
-    background-color: yellow;
-    border: 10px groove #4CAF50;
+    background-color: #ffffff;
+    border: 2px groove #dd1212;
+    border-radius: 16px;
+    padding: 16px;
 }
 
 #bt:hover {
-    background-color: #4CAF50;
-    transition-duration: 1.0s;
+    background-color: #dd1212;
+    transition-duration: .4s;
     border-radius: 50%;
-    color: white;
+    color: #ffffff;
+    cursor: pointer;
 }
 
 .text > * {
